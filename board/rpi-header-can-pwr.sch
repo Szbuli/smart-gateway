@@ -10649,29 +10649,6 @@ Wickmann</description>
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="LITTLEFUSE" prefix="F" uservalue="yes">
-<description>&lt;B&gt;LITTLEFUSE&lt;/B&gt;&lt;p&gt;
-Picofuse/slow Littlefuse</description>
-<gates>
-<gate name="A" symbol="FUSE" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="LITTLEFUSE">
-<connects>
-<connect gate="A" pin="1" pad="1"/>
-<connect gate="A" pin="2" pad="2"/>
-</connects>
-<technologies>
-<technology name="">
-<attribute name="MF" value="" constant="no"/>
-<attribute name="MPN" value="" constant="no"/>
-<attribute name="OC_FARNELL" value="unknown" constant="no"/>
-<attribute name="OC_NEWARK" value="unknown" constant="no"/>
-</technology>
-</technologies>
-</device>
-</devices>
-</deviceset>
 <deviceset name="FUSE" prefix="F">
 <description>&lt;b&gt;Fuse&lt;/b&gt;</description>
 <gates>
@@ -12582,8 +12559,6 @@ Source: AVX .. aphvc.pdf</description>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="P+11" library="supply1" deviceset="+12V" device=""/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
-<part name="F3" library="fuse" deviceset="LITTLEFUSE" device=""/>
-<part name="F5" library="fuse" deviceset="FUSE" device="TE5"/>
 <part name="J1" library="SparkFun-Connectors" deviceset="CONN_02" device="3.5MM"/>
 <part name="GND84" library="SparkFun-Connectors" deviceset="CONN_02" device="3.5MM"/>
 <part name="+3V30" library="supply1" deviceset="+3V3" device=""/>
@@ -12600,6 +12575,9 @@ Source: AVX .. aphvc.pdf</description>
 <part name="GND17" library="supply1" deviceset="GND" device=""/>
 <part name="GND19" library="supply1" deviceset="GND" device=""/>
 <part name="JP1" library="jumper" deviceset="JP1Q" device=""/>
+<part name="F1" library="fuse" deviceset="FUSE" device="TE5"/>
+<part name="F2" library="fuse" deviceset="FUSE" device="LITTLEFUSE"/>
+<part name="F3" library="fuse" deviceset="FUSE" device="TE5"/>
 </parts>
 <sheets>
 <sheet>
@@ -12623,7 +12601,8 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="GND32" gate="1" x="-58.42" y="-25.4" rot="R180"/>
 <instance part="GND17" gate="1" x="-109.22" y="-22.86"/>
 <instance part="GND19" gate="1" x="-76.2" y="-22.86"/>
-<instance part="JP1" gate="A" x="-45.72" y="12.7" rot="R90"/>
+<instance part="JP1" gate="A" x="-30.48" y="12.7" rot="R90"/>
+<instance part="F3" gate="G$1" x="-10.16" y="12.7"/>
 </instances>
 <busses>
 </busses>
@@ -12807,15 +12786,22 @@ Source: AVX .. aphvc.pdf</description>
 </segment>
 <segment>
 <pinref part="JP1" gate="A" pin="2"/>
-<wire x1="-53.34" y1="12.7" x2="-60.96" y2="12.7" width="0.1524" layer="91"/>
-<label x="-60.96" y="12.7" size="1.778" layer="95" rot="R180" xref="yes"/>
+<wire x1="-38.1" y1="12.7" x2="-45.72" y2="12.7" width="0.1524" layer="91"/>
+<label x="-45.72" y="12.7" size="1.778" layer="95" rot="R180" xref="yes"/>
+</segment>
+</net>
+<net name="N$5" class="0">
+<segment>
+<pinref part="JP1" gate="A" pin="1"/>
+<pinref part="F3" gate="G$1" pin="1"/>
+<wire x1="-22.86" y1="12.7" x2="-15.24" y2="12.7" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="PRE_FUSE_12V" class="0">
 <segment>
-<pinref part="JP1" gate="A" pin="1"/>
-<wire x1="-38.1" y1="12.7" x2="-30.48" y2="12.7" width="0.1524" layer="91"/>
-<label x="-30.48" y="12.7" size="1.778" layer="95" xref="yes"/>
+<pinref part="F3" gate="G$1" pin="2"/>
+<wire x1="-5.08" y1="12.7" x2="10.16" y2="12.7" width="0.1524" layer="91"/>
+<label x="10.16" y="12.7" size="1.778" layer="95" xref="yes"/>
 </segment>
 </net>
 </nets>
@@ -13376,9 +13362,9 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="GND16" gate="1" x="101.6" y="93.98"/>
 <instance part="P+11" gate="1" x="193.04" y="78.74" rot="R270"/>
 <instance part="GND18" gate="1" x="187.96" y="76.2" rot="R90"/>
-<instance part="F3" gate="A" x="172.72" y="78.74"/>
-<instance part="F5" gate="G$1" x="187.96" y="43.18"/>
 <instance part="J1" gate="G$1" x="152.4" y="76.2"/>
+<instance part="F1" gate="G$1" x="172.72" y="78.74"/>
+<instance part="F2" gate="G$1" x="187.96" y="43.18"/>
 </instances>
 <busses>
 </busses>
@@ -13411,7 +13397,7 @@ Source: AVX .. aphvc.pdf</description>
 <segment>
 <pinref part="P+11" gate="1" pin="+12V"/>
 <wire x1="177.8" y1="78.74" x2="190.5" y2="78.74" width="0.1524" layer="91"/>
-<pinref part="F3" gate="A" pin="2"/>
+<pinref part="F1" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -13515,7 +13501,7 @@ Source: AVX .. aphvc.pdf</description>
 <segment>
 <pinref part="P+7" gate="G$1" pin="5V"/>
 <wire x1="193.04" y1="43.18" x2="203.2" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="F5" gate="G$1" pin="2"/>
+<pinref part="F2" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -13531,8 +13517,8 @@ Source: AVX .. aphvc.pdf</description>
 <net name="PRE_FUSE_12V" class="0">
 <segment>
 <wire x1="167.64" y1="78.74" x2="160.02" y2="78.74" width="0.1524" layer="91"/>
-<pinref part="F3" gate="A" pin="1"/>
 <pinref part="J1" gate="G$1" pin="2"/>
+<pinref part="F1" gate="G$1" pin="1"/>
 </segment>
 </net>
 <net name="N$8" class="0">
@@ -13556,7 +13542,7 @@ Source: AVX .. aphvc.pdf</description>
 <junction x="170.18" y="43.18"/>
 <pinref part="C11" gate="G$1" pin="1"/>
 <wire x1="182.88" y1="43.18" x2="172.72" y2="43.18" width="0.1524" layer="91"/>
-<pinref part="F5" gate="G$1" pin="1"/>
+<pinref part="F2" gate="G$1" pin="1"/>
 </segment>
 </net>
 </nets>
