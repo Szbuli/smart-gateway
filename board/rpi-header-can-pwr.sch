@@ -12559,7 +12559,7 @@ Source: AVX .. aphvc.pdf</description>
 <part name="GND16" library="supply1" deviceset="GND" device=""/>
 <part name="P+11" library="supply1" deviceset="+12V" device=""/>
 <part name="GND18" library="supply1" deviceset="GND" device=""/>
-<part name="J1" library="SparkFun-Connectors" deviceset="CONN_02" device="3.5MM"/>
+<part name="J1" library="SparkFun-Connectors" deviceset="CONN_02" device="5MM"/>
 <part name="GND84" library="SparkFun-Connectors" deviceset="CONN_02" device="3.5MM"/>
 <part name="+3V30" library="supply1" deviceset="+3V3" device=""/>
 <part name="GND85" library="supply1" deviceset="GND" device=""/>
