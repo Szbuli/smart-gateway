@@ -13,14 +13,18 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.hivemq.client.mqtt.MqttClient;
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 
 import hu.szbuli.smarthome.can.CanReceiveThread;
 import hu.szbuli.smarthome.can.CanSendThread;
+import hu.szbuli.smarthome.gateway.heartbeat.HeartBeatService;
 
 public class Main {
 
   public static void main(String[] args) throws IOException, ParseException {
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+
     Options options = new Options();
     options.addOption("m", "mqtt", true, "mqtt config file");
     options.addOption("g", "gateway", true, "gateway config file");
@@ -54,12 +58,24 @@ public class Main {
         // .sslWithDefaultConfig()
         .buildAsync();
 
+    String statusTopic = prop.getProperty("statusTopic");
+
     client.connectWith()
+        .willPublish()
+        .topic(statusTopic).retain(true)
+        .payload(HeartBeatService.OFFLINE_PAYLOAD)
+        .applyWillPublish()
         .simpleAuth()
         .username(prop.getProperty("username"))
         .password(prop.getProperty("password").getBytes())
         .applySimpleAuth()
-        .send();
+        .send()
+        .thenCompose(connAck -> client.publishWith()
+            .topic(statusTopic)
+            .payload(HeartBeatService.ONLINE_PAYLOAD)
+            .qos(MqttQos.AT_MOST_ONCE)
+            .retain(true)
+            .send());
 
     return client;
   }

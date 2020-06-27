@@ -23,7 +23,7 @@ public class CanMqttTopicConverterTest {
 
   @Test
   void mqttTopicWithoutDeviceId() {
-    Integer deviceId = topicConverter.getDeviceId("alma", "alma");
+    Integer deviceId = topicConverter.getDeviceId("a/b/c/2", "a/b/c/2");
     assertNull(deviceId);
   }
 
