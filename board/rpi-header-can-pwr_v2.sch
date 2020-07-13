@@ -18227,6 +18227,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <part name="+3V9" library="supply1" deviceset="+3V3" device=""/>
 <part name="C14" library="rcl" deviceset="C-EU" device="C0603" value="1u"/>
 <part name="C15" library="rcl" deviceset="C-EU" device="C0603" value="100n"/>
+<part name="R10" library="resistor" deviceset="R-EU_" device="R0603" value="4.7K"/>
+<part name="+3V10" library="supply1" deviceset="+3V3" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -18263,6 +18265,8 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <instance part="GND21" gate="1" x="99.06" y="10.16" rot="R270"/>
 <instance part="GND22" gate="1" x="142.24" y="10.16" rot="R90"/>
 <instance part="+3V9" gate="G$1" x="142.24" y="22.86" rot="R270"/>
+<instance part="R10" gate="G$1" x="35.56" y="-12.7" rot="R90"/>
+<instance part="+3V10" gate="G$1" x="35.56" y="0"/>
 </instances>
 <busses>
 </busses>
@@ -18374,6 +18378,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <pinref part="U3" gate="U1" pin="!CS"/>
 <pinref part="+3V9" gate="G$1" pin="+3V3"/>
 <wire x1="139.7" y1="22.86" x2="134.62" y2="22.86" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="R10" gate="G$1" pin="2"/>
+<pinref part="+3V10" gate="G$1" pin="+3V3"/>
+<wire x1="35.56" y1="-2.54" x2="35.56" y2="-7.62" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="CAN_H" class="0">
@@ -18525,7 +18534,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <segment>
 <pinref part="U2" gate="G$1" pin="ALERT/RDY"/>
 <pinref part="R7" gate="G$1" pin="2"/>
-<wire x1="40.64" y1="-22.86" x2="33.02" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="-22.86" x2="35.56" y2="-22.86" width="0.1524" layer="91"/>
+<pinref part="R10" gate="G$1" pin="1"/>
+<wire x1="35.56" y1="-22.86" x2="33.02" y2="-22.86" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="-17.78" x2="35.56" y2="-22.86" width="0.1524" layer="91"/>
+<junction x="35.56" y="-22.86"/>
 </segment>
 </net>
 <net name="ADC_ALERT" class="0">
