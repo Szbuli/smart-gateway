@@ -106,22 +106,24 @@ public class Gateway {
       logger.info("conversion config not found for mqtt message");
       return;
     }
-    CanMessage canMessage = toCan(mqttMessage, conversionConfig.getConverter());
-    try {
-      int topicId = conversionConfig.getCanTopic();
-      Integer deviceId = canMqttTopicConverter.getDeviceId(originalTopic, mqttMessage.getTopic().toString());
-      if (deviceId == null) {
-        deviceId = 0;
+    if (!conversionConfig.getConverter().equals("heartbeat")) {
+      CanMessage canMessage = toCan(mqttMessage, conversionConfig.getConverter());
+      try {
+        int topicId = conversionConfig.getCanTopic();
+        Integer deviceId = canMqttTopicConverter.getDeviceId(originalTopic, mqttMessage.getTopic().toString());
+        if (deviceId == null) {
+          deviceId = 0;
+        }
+
+        canMessage.setTopicId(topicId);
+        canMessage.setDeviceId(deviceId);
+
+        logger.info("mqtt message publishing to deviceId {}, topicId {}", deviceId, topicId);
+
+        this.sendCanQueue.put(canMessage);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
       }
-
-      canMessage.setTopicId(topicId);
-      canMessage.setDeviceId(deviceId);
-
-      logger.info("mqtt message publishing to deviceId {}, topicId {}", deviceId, topicId);
-
-      this.sendCanQueue.put(canMessage);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
     }
   }
 
