@@ -15,7 +15,7 @@ import hu.szbuli.smarthome.can.SafeThread;
 
 public class HeartBeatService extends SafeThread {
 
-  private static final int MAX_IDLE_TIME_SECONDS = 30;
+  private static final int MAX_IDLE_TIME_SECONDS = 70;
 
   public static final byte[] ONLINE_PAYLOAD = "online".getBytes();
   public static final byte[] OFFLINE_PAYLOAD = "offline".getBytes();
