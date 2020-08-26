@@ -2,46 +2,46 @@ package hu.szbuli.smarthome.can;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import hu.szbuli.smarthome.rpi.mqtt.proxy.Gateway;
 
 public class CanReceiveThread extends SafeThread {
 
-	private Gateway gateway;
+  private static final Logger logger = LoggerFactory.getLogger(CanReceiveThread.class);
 
-	public CanReceiveThread(Gateway gateway) {
-		this.gateway = gateway;
-	}
+  private Gateway gateway;
 
-	@Override
-	public void doRun() {
-		CanConnectionService canService = new CanConnectionServiceImpl();
+  public CanReceiveThread(Gateway gateway) {
+    this.gateway = gateway;
+  }
 
-		while (true) {
-			try {
-				canService.connectCanSocket();
-				while (true) {
-					CanMessage message = canService.receiveCanMessage(-1, 0);
-					gateway.processIncomingCanMessage(message);
+  @Override
+  public void doRun() {
+    CanConnectionService canService = new CanConnectionServiceImpl();
 
-					String sent = "";
-					byte[] data = message.getData();
-					sent += "topicId: " + message.getTopicId() + " | deviceId: " + message.getDeviceId() + " | RTR: " + message.isRtr() + " | length: "
-							+ data.length + " | data: ";
-					for (int i = 0; i < data.length; i++) {
-						sent += data[i] + " ";
-					}
-					System.out.println(sent);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    while (true) {
+      try {
+        canService.connectCanSocket();
+        while (true) {
+          try {
+            CanMessage message = canService.receiveCanMessage(-1, 0);
+            gateway.processIncomingCanMessage(message);
+          } catch (Exception e) {
+            logger.error("error happened when processing incoming can message", e);
+          }
+        }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+  }
 
-	@Override
-	public void setThreadName() {
-		this.threadName = "CAN_RECIEVE_THREAD";
+  @Override
+  public void setThreadName() {
+    this.threadName = "CAN_RECIEVE_THREAD";
 
-	}
+  }
 
 }
