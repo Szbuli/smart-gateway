@@ -20,6 +20,7 @@ public class MqttManager {
 
   public void init(Properties props) throws FileNotFoundException, IOException {
     mqttClient = MqttClient.builder()
+        .automaticReconnectWithDefaultConfig()
         .useMqttVersion5()
         .identifier(UUID.randomUUID().toString())
         .serverHost(props.getProperty("host"))

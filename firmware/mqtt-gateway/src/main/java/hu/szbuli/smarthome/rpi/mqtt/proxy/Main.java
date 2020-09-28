@@ -51,6 +51,7 @@ public class Main {
     prop.load(new FileInputStream(mqttConfigFile));
 
     Mqtt5AsyncClient client = MqttClient.builder()
+        .automaticReconnectWithDefaultConfig()
         .useMqttVersion5()
         .identifier(UUID.randomUUID().toString())
         .serverHost(prop.getProperty("host"))
