@@ -3,6 +3,7 @@ package hu.szbuli.smarthome.rpi.mqtt.proxy;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -11,6 +12,8 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
@@ -22,9 +25,10 @@ import hu.szbuli.smarthome.gateway.heartbeat.HeartBeatService;
 
 public class Main {
 
-  public static void main(String[] args) throws IOException, ParseException {
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+  private static final Logger logger = LoggerFactory.getLogger(Main.class);
+  private static Mqtt5AsyncClient client = null;
 
+  public static void main(String[] args) throws IOException, ParseException {
     Options options = new Options();
     options.addOption("m", "mqtt", true, "mqtt config file");
     options.addOption("g", "gateway", true, "gateway config file");
@@ -44,24 +48,30 @@ public class Main {
 
     CanReceiveThread canRecieveThread = new CanReceiveThread(gateway);
     canRecieveThread.start();
+
   }
 
   private static Mqtt5AsyncClient initMqttClient(String mqttConfigFile) throws FileNotFoundException, IOException {
     Properties prop = new Properties();
     prop.load(new FileInputStream(mqttConfigFile));
 
-    Mqtt5AsyncClient client = MqttClient.builder()
-        .automaticReconnectWithDefaultConfig()
-        .useMqttVersion5()
-        .identifier(UUID.randomUUID().toString())
-        .serverHost(prop.getProperty("host"))
-        .serverPort(Integer.parseInt(prop.getProperty("port")))
-        // .sslWithDefaultConfig()
-        .buildAsync();
-
     String statusTopic = prop.getProperty("statusTopic");
 
-    client.connectWith()
+    client = MqttClient.builder()
+        .automaticReconnectWithDefaultConfig()
+        .addDisconnectedListener(context -> {
+          logger.error("disconected from mqtt ({})", Instant.now(), context.getCause());
+        })
+        .addConnectedListener(context -> {
+          logger.info("connected to mqtt ({})", Instant.now());
+          client.publishWith()
+              .topic(statusTopic)
+              .payload(HeartBeatService.ONLINE_PAYLOAD)
+              .qos(MqttQos.AT_MOST_ONCE)
+              .retain(true)
+              .send();
+        })
+        .useMqttVersion5()
         .willPublish()
         .topic(statusTopic).retain(true)
         .payload(HeartBeatService.OFFLINE_PAYLOAD)
@@ -70,13 +80,14 @@ public class Main {
         .username(prop.getProperty("username"))
         .password(prop.getProperty("password").getBytes())
         .applySimpleAuth()
-        .send()
-        .thenCompose(connAck -> client.publishWith()
-            .topic(statusTopic)
-            .payload(HeartBeatService.ONLINE_PAYLOAD)
-            .qos(MqttQos.AT_MOST_ONCE)
-            .retain(true)
-            .send());
+        .identifier(UUID.randomUUID().toString())
+        .serverHost(prop.getProperty("host"))
+        .serverPort(Integer.parseInt(prop.getProperty("port")))
+        // .sslWithDefaultConfig()
+        .buildAsync();
+
+    client.connectWith()
+        .send();
 
     return client;
   }
