@@ -26,5 +26,5 @@ jobs:
       run: ./firmware/mqtt-gateway/gradlew build
     - uses: actions/upload-artifact@v2
       with:
-        name: Package
-        path: ./firmware/mqtt-gateway/build/libs
+        name: mqtt-gateway
+        path: firmware/mqtt-gateway/build/libs
