@@ -23,7 +23,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x ./firmware/mqtt-gateway/gradlew
     - name: Build with Gradle
-      run: ./firmware/mqtt-gateway/gradlew build
+      run: ./firmware/mqtt-gateway/gradlew build -p firmware/mqtt-gateway
     - name: Archive build artifacts
       uses: actions/upload-artifact@v2
       with:
