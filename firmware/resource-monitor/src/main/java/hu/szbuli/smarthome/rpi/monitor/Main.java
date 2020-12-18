@@ -43,11 +43,13 @@ public class Main {
     Bme280 bme280 = new Bme280(props, mqttManager);
     bme280.init();
 
-    // Output data to screen
+    RpiCoreTemperature rpiCoreTemperature = new RpiCoreTemperature(props, mqttManager);
+    rpiCoreTemperature.init();
 
     while (true) {
       ads1x15.getValue();
       bme280.getValue();
+      rpiCoreTemperature.readAndPublish();
       Thread.sleep(READ_FREQUENCY_SECONDS * 60 * 1000);
     }
 

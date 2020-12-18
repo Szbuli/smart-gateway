@@ -173,7 +173,7 @@ public class Bme280 {
     }
 
     if (humidityTopic != null) {
-      this.mqttManager.send(humidityTopic, df.format(cTemp));
+      this.mqttManager.send(humidityTopic, df.format(humidity));
     }
     if (temperatureTopic != null) {
       this.mqttManager.send(temperatureTopic, df.format(cTemp));
