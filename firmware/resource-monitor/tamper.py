@@ -2,6 +2,7 @@ import threading
 import time
 import RPi.GPIO as GPIO
 
+tamper_pin = 17
 
 class Tamper:
     def __init__(self, mqtt, tamperTopic):
@@ -9,9 +10,9 @@ class Tamper:
         self.mqtt = mqtt
         self.tamperTopic = tamperTopic
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(0, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
+        GPIO.setup(tamper_pin, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
         GPIO.add_event_detect(
-            0, GPIO.BOTH, callback=self.tamper_event)
+            tamper_pin, GPIO.BOTH, callback=self.tamper_event)
         self.tamper_event_happened = None
 
     def tamper_event(self, channel):
@@ -28,7 +29,7 @@ class Tamper:
             checks = 0
             while checks < 5:
                 checks += 1
-                tamper_state = GPIO.input(0)
+                tamper_state = GPIO.input(tamper_pin)
                 time.sleep(0.3)
                 if self.tamper_event_happened != tamper_state:
                     self.tamper_event_happened = tamper_state
