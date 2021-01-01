@@ -16,7 +16,11 @@ class Tamper:
         self.tamper_event_happened = None
 
     def tamper_event(self, channel):
-        self.lock.release()
+        if self.lock.locked():
+            try:
+                self.lock.release()
+            except:
+                pass
 
     def start(self):
         t = threading.Thread(target=self.check_tamper)
