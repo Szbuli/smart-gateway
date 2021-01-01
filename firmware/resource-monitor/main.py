@@ -40,7 +40,7 @@ def start():
             config['rpi']['averageLoadTopic'],
             config['rpi']['diskUsageTopic'])
 
-    if config.has_option('rpi', 'temperatureTopic') and config.has_option('rpi', 'humidityTopic'):
+    if config.has_option('sensors', 'temperatureTopic') and config.has_option('sensors', 'humidityTopic'):
         global bme_280
         bme_280 = BME280(mqtt_client, config['sensors']['temperatureTopic'],
                          config['sensors']['humidityTopic'])
