@@ -8,10 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
-import com.hivemq.client.mqtt.datatypes.MqttQos;
-import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
-
 import hu.szbuli.smarthome.can.SafeThread;
+import hu.szbuli.smarthome.mqtt.MqttManager;
 
 public class HeartBeatService extends SafeThread {
 
@@ -21,12 +19,12 @@ public class HeartBeatService extends SafeThread {
   public static final byte[] OFFLINE_PAYLOAD = "offline".getBytes();
 
   private Map<String, Instant> heartbeatMap;
-  private Mqtt5AsyncClient mqttClient;
+  private MqttManager mqttManager;
 
-  public HeartBeatService(Mqtt5AsyncClient mqttClient) {
+  public HeartBeatService(MqttManager mqttManager) {
     super();
     heartbeatMap = new HashMap<>();
-    this.mqttClient = mqttClient;
+    this.mqttManager = mqttManager;
   }
 
   @Override
@@ -40,12 +38,7 @@ public class HeartBeatService extends SafeThread {
           Entry<String, Instant> entry = it.next();
           if (Duration.between(entry.getValue(), currentTime).compareTo(Duration.ofSeconds(MAX_IDLE_TIME_SECONDS)) > 0) {
             it.remove();
-            mqttClient.publishWith()
-                .topic(entry.getKey())
-                .payload(OFFLINE_PAYLOAD)
-                .qos(MqttQos.AT_MOST_ONCE)
-                .retain(true)
-                .send();
+            mqttManager.publishMqttMessage(entry.getKey(), OFFLINE_PAYLOAD, true);
           }
         }
 
@@ -64,12 +57,7 @@ public class HeartBeatService extends SafeThread {
 
   synchronized public void refreshDeviceTimestamp(Instant time, String mqttTopic) {
     if (!heartbeatMap.containsKey(mqttTopic)) {
-      mqttClient.publishWith()
-          .topic(mqttTopic)
-          .payload(ONLINE_PAYLOAD)
-          .qos(MqttQos.AT_MOST_ONCE)
-          .retain(true)
-          .send();
+      mqttManager.publishMqttMessage(mqttTopic, ONLINE_PAYLOAD, true);
     }
     heartbeatMap.put(mqttTopic, time);
   }

@@ -1,5 +1,7 @@
 package hu.szbuli.smarthome.gateway.converter;
 
+import hu.szbuli.smarthome.gateway.util.NumberUtils;
+
 public class CanMqttPayloadConverter implements GatewayConverter {
 
   @Override
@@ -15,7 +17,7 @@ public class CanMqttPayloadConverter implements GatewayConverter {
 
   @Override
   public byte[] uint8ToNumber(byte[] uint8) {
-    return Integer.toString(Byte.toUnsignedInt(uint8[0])).getBytes();
+    return Integer.toString(NumberUtils.uint8ToInteger(uint8[0])).getBytes();
   }
 
   @Override
@@ -25,7 +27,7 @@ public class CanMqttPayloadConverter implements GatewayConverter {
 
   @Override
   public byte[] uint16ToNumber(byte[] uint16) {
-    int number = Byte.toUnsignedInt(uint16[0]) | Byte.toUnsignedInt(uint16[1]) << 8;
+    int number = NumberUtils.uint16ToInteger(uint16);
     return Integer.toString(number).getBytes();
   }
 

@@ -4,3 +4,4 @@ config.csv
 /bin/
 /.settings/
 .classpath
+deviceTypes.json
