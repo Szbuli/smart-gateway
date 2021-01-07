@@ -52,7 +52,7 @@ def start():
 
     if config.has_option('sensors','voltageTopic'):
         global ads1115
-        ads1115 = ADS1115(mqtt_client, config['sensors']['voltageTopic'])
+        ads1115 = ADS1115(mqtt_client, config['sensors']['voltageTopic'], config['sensors']['voltageMultiplier'])
 
     tl.start()
 
