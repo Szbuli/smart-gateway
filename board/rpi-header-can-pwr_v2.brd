@@ -1987,8 +1987,8 @@ v1.5</text>
 <wire x1="20.5" y1="49.5" x2="21.5" y2="49.5" width="0.254" layer="122"/>
 <text x="31" y="41" size="1.016" layer="121">FUSE
 2.5A</text>
-<text x="3.3" y="52.8" size="1.4224" layer="121">12V</text>
-<text x="19.8" y="53.5" size="1.4224" layer="121">GND</text>
+<text x="19.3" y="53.8" size="1.4224" layer="121">12V</text>
+<text x="2.8" y="54" size="1.4224" layer="121">GND</text>
 <text x="33.1" y="33.4" size="0.8128" layer="121" rot="R180">D4</text>
 <text x="35.98" y="24.35" size="0.8128" layer="121" rot="R180">R5</text>
 <text x="34.7" y="21.1" size="0.8128" layer="121">R2</text>
@@ -2016,8 +2016,8 @@ pullups</text>
 <text x="70.7" y="46.1" size="1.016" layer="122" rot="MR180">ADC
 ALERT</text>
 <text x="26.2" y="46.6" size="0.8128" layer="122" rot="MR180">T2</text>
-<text x="3.3" y="54.3" size="1.4224" layer="122" rot="MR180">12V</text>
-<text x="23.7" y="53.5" size="1.4224" layer="122" rot="MR0">GND</text>
+<text x="19.3" y="55.3" size="1.4224" layer="122" rot="MR180">12V</text>
+<text x="6.7" y="54" size="1.4224" layer="122" rot="MR0">GND</text>
 <text x="76.4" y="40.3" size="0.8128" layer="122" rot="MR0">R1</text>
 <text x="55.97" y="38.36" size="0.8128" layer="122" rot="MR0">C9</text>
 <text x="58.14" y="38.3" size="0.8128" layer="122" rot="MR0">R5</text>
