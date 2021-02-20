@@ -75,6 +75,7 @@ public class Gateway {
 
       Map<String, String> valuesMap = new HashMap<>();
       valuesMap.put("deviceId", "+");
+      valuesMap.put("sensorId", "+");
       StringSubstitutor s = new StringSubstitutor(valuesMap);
       mqttListener.subscribe(s.replace(topic));
     });
@@ -91,12 +92,14 @@ public class Gateway {
     MqttTopic mqttTopic = new MqttTopic(conversionConfig.getMqttTopic());
     mqttTopic.injectValues("device", canMessage.getDeviceId());
 
-    if (conversionConfig.getConverter().equals("heartbeat")) {
+    String converter = conversionConfig.getConverter();
+
+    if (converter.equals("heartbeat")) {
       heartBeatService.refreshDeviceTimestamp(Instant.now(), mqttTopic.getTopic());
-    } else if (conversionConfig.getConverter().equals("config")) {
-      discoveryManager.configure(can2Mqtt, canMessage);
+    } else if (converter.startsWith("config")) {
+      discoveryManager.configure(converter.substring(converter.indexOf("/")), can2Mqtt, canMessage);
     } else {
-      byte[] payload = toMqttPayload(canMessage, conversionConfig.getConverter());
+      byte[] payload = toMqttPayload(canMessage, converter);
 
       logger.debug("can message publishing to {}", mqttTopic);
 
@@ -114,6 +117,9 @@ public class Gateway {
     }
     if (!conversionConfig.getConverter().equals("heartbeat")) {
       CanMessage canMessage = toCan(mqttMessage, conversionConfig.getConverter());
+      if (canMessage == null) {
+        return;
+      }
       try {
         int topicId = conversionConfig.getCanTopic();
         Integer deviceId = canMqttTopicConverter.getDeviceId(originalTopic, mqttMessage.getTopic().toString());
@@ -147,6 +153,9 @@ public class Gateway {
     case "uint16ToNumber":
       payload = gatewayConverter.numberToUint16(mqttPayloadString);
       break;
+    case "config/binary_sensor":
+    case "config/switch":
+      return null;
     default:
       throw new UnsupportedOperationException(converter);
     }

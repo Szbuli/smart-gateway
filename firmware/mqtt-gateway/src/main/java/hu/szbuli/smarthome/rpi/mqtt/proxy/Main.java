@@ -39,6 +39,7 @@ public class Main {
     Options options = new Options();
     options.addOption("m", "mqtt", true, "mqtt config file");
     options.addOption("g", "gateway", true, "gateway config file");
+    options.addOption("d", "deviceTypes", true, "device types config file");
 
     CommandLineParser parser = new DefaultParser();
     CommandLine cmd = parser.parse(options, args);

@@ -8,6 +8,8 @@ public class HAEntityConfig {
   private String uniqueId;
   @JsonProperty("state_topic")
   private String stateTopic;
+  @JsonProperty("command_topic")
+  private String commandTopic;
   @JsonProperty("availability_topic")
   private String availabilityTopic;
   private HADeviceConfig device;
@@ -60,6 +62,14 @@ public class HAEntityConfig {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getCommandTopic() {
+    return commandTopic;
+  }
+
+  public void setCommandTopic(String commandTopic) {
+    this.commandTopic = commandTopic;
   }
 
 }

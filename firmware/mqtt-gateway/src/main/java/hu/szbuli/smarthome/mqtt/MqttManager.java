@@ -16,12 +16,7 @@ public class MqttManager {
   }
 
   public void publishMqttMessage(String topic, String payload, boolean retain) {
-    mqttClient.publishWith()
-        .topic(topic)
-        .payload(payload.getBytes())
-        .qos(MqttQos.AT_MOST_ONCE)
-        .retain(retain)
-        .send();
+    this.publishMqttMessage(topic, payload.getBytes(), retain);
   }
 
   public void publishMqttMessage(String topic, byte[] payload, boolean retain) {
