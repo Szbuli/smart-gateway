@@ -2036,7 +2036,7 @@ ant</text>
 <text x="5.06" y="34.38" size="0.8128" layer="121">C1</text>
 <text x="14.88" y="34.68" size="0.8128" layer="121">R2</text>
 <text x="11.94" y="34.9" size="0.8128" layer="121">R2</text>
-<text x="2.76" y="15.29" size="0.8128" layer="122" distance="35" rot="MR90" align="center">GND  FAN 12V
+<text x="2.76" y="15.06" size="0.8128" layer="122" distance="35" rot="MR90" align="center">12V  FAN GND
 MAX 0.5A</text>
 <text x="17.02" y="18.44" size="0.8128" layer="122" rot="MR270">FUSE
 500mA</text>
