@@ -70,14 +70,18 @@ public class Gateway {
       mqtt2Can.put(mqttTopic, conversionConfig);
     }
 
-    mqtt2Can.keySet().forEach(topic -> {
-      MqttListener mqttListener = new MqttListener(mqttManager.getMqttClient(), this, topic);
+    mqtt2Can.entrySet().stream()
+    .filter(config -> {
+      return !config.getValue().getConverter().startsWith("config");
+    })
+    .forEach(config -> {
+      MqttListener mqttListener = new MqttListener(mqttManager.getMqttClient(), this, config.getKey());
 
       Map<String, String> valuesMap = new HashMap<>();
       valuesMap.put("deviceId", "+");
       valuesMap.put("sensorId", "+");
       StringSubstitutor s = new StringSubstitutor(valuesMap);
-      mqttListener.subscribe(s.replace(topic));
+      mqttListener.subscribe(s.replace(config.getKey()));
     });
   }
 
