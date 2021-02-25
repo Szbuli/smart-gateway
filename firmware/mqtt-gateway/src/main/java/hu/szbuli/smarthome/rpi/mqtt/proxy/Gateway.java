@@ -90,7 +90,7 @@ public class Gateway {
     }
 
     MqttTopic mqttTopic = new MqttTopic(conversionConfig.getMqttTopic());
-    mqttTopic.injectValues("device", canMessage.getDeviceId());
+    mqttTopic.injectValues("deviceId", canMessage.getDeviceId());
 
     String converter = conversionConfig.getConverter();
 
