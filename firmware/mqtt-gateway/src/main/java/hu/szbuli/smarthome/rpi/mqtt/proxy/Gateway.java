@@ -97,7 +97,7 @@ public class Gateway {
     if (converter.equals("heartbeat")) {
       heartBeatService.refreshDeviceTimestamp(Instant.now(), mqttTopic.getTopic());
     } else if (converter.startsWith("config")) {
-      discoveryManager.configure(converter.substring(converter.indexOf("/")), can2Mqtt, canMessage);
+      discoveryManager.configure(converter.substring(converter.indexOf("/") + 1), can2Mqtt, canMessage);
     } else {
       byte[] payload = toMqttPayload(canMessage, converter);
 

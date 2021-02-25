@@ -73,7 +73,6 @@ public class DiscoveryManager {
 
     String configString = objectMapper.writeValueAsString(entityConfig);
     mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), configString.getBytes(), true);
-
   }
 
   private HADeviceConfig getDeviceConfig(int deviceId, int deviceTypeId, String version) {
