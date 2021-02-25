@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import hu.szbuli.smarthome.can.CanMessage;
 import hu.szbuli.smarthome.gateway.util.NumberUtils;
@@ -27,6 +28,7 @@ public class DiscoveryManager {
 
   public DiscoveryManager(MqttManager mqttManager, DeviceType[] deviceTypes, String gatewayName) {
     this.objectMapper = new ObjectMapper();
+    this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     this.mqttManager = mqttManager;
     this.gatewayName = gatewayName;
     this.deviceTypeMap = Arrays.stream(deviceTypes).collect(Collectors.toMap(DeviceType::getDeviceTypeId, dt -> dt));
