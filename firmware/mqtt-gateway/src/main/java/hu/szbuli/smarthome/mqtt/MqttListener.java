@@ -23,6 +23,7 @@ public class MqttListener {
   }
 
   public void subscribe(String topic) {
+    logger.info("subscribing to topic: {}", topic);
     mqttClient.subscribeWith()
         .topicFilter(topic)
         .noLocal(true)

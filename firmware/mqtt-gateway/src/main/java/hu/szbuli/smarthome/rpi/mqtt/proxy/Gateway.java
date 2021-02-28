@@ -16,8 +16,7 @@ import org.apache.commons.text.StringSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hivemq.client.mqtt.datatypes.MqttQos;
-import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 
 import hu.szbuli.smarthome.can.CanMessage;
@@ -25,14 +24,17 @@ import hu.szbuli.smarthome.gateway.converter.CanMqttPayloadConverter;
 import hu.szbuli.smarthome.gateway.converter.CanMqttTopicConverter;
 import hu.szbuli.smarthome.gateway.converter.GatewayConverter;
 import hu.szbuli.smarthome.gateway.heartbeat.HeartBeatService;
+import hu.szbuli.smarthome.gateway.homeassistant.DiscoveryManager;
 import hu.szbuli.smarthome.mqtt.MqttListener;
+import hu.szbuli.smarthome.mqtt.MqttManager;
+import hu.szbuli.smarthome.mqtt.MqttTopic;
 
 public class Gateway {
 
   private static final Logger logger = LoggerFactory.getLogger(Gateway.class);
 
   private static final String[] HEADERS = { "topic", "mqtt-topic", "converter" };
-  private Mqtt5AsyncClient mqttClient;
+  private MqttManager mqttManager;
   private BlockingQueue<CanMessage> sendCanQueue;
 
   private Map<Integer, ConversionConfig> can2Mqtt = new HashMap<>();
@@ -40,12 +42,16 @@ public class Gateway {
   private GatewayConverter gatewayConverter = new CanMqttPayloadConverter();
   private CanMqttTopicConverter canMqttTopicConverter = new CanMqttTopicConverter();
   private HeartBeatService heartBeatService;
+  private DiscoveryManager discoveryManager;
 
-  public Gateway(String configFile, Mqtt5AsyncClient mqttClient, BlockingQueue<CanMessage> sendCanQueue) throws IOException {
-    this.mqttClient = mqttClient;
+  public Gateway(String configFile, MqttManager mqttManager, DiscoveryManager discoveryManager,
+      BlockingQueue<CanMessage> sendCanQueue) throws IOException {
+    this.mqttManager = mqttManager;
     this.sendCanQueue = sendCanQueue;
 
-    heartBeatService = new HeartBeatService(mqttClient);
+    this.discoveryManager = discoveryManager;
+
+    heartBeatService = new HeartBeatService(mqttManager);
     heartBeatService.start();
 
     Reader in = new FileReader(new File(configFile).getAbsolutePath());
@@ -64,17 +70,22 @@ public class Gateway {
       mqtt2Can.put(mqttTopic, conversionConfig);
     }
 
-    mqtt2Can.keySet().forEach(topic -> {
-      MqttListener mqttListener = new MqttListener(this.mqttClient, this, topic);
+    mqtt2Can.entrySet().stream()
+    .filter(config -> {
+      return !config.getValue().getConverter().startsWith("config");
+    })
+    .forEach(config -> {
+      MqttListener mqttListener = new MqttListener(mqttManager.getMqttClient(), this, config.getKey());
 
       Map<String, String> valuesMap = new HashMap<>();
       valuesMap.put("deviceId", "+");
+      valuesMap.put("sensorId", "+");
       StringSubstitutor s = new StringSubstitutor(valuesMap);
-      mqttListener.subscribe(s.replace(topic));
+      mqttListener.subscribe(s.replace(config.getKey()));
     });
   }
 
-  public void processIncomingCanMessage(CanMessage canMessage) {
+  public void processIncomingCanMessage(CanMessage canMessage) throws JsonProcessingException {
     logger.debug("Incoming can message:  deviceId {}, topcId {}", canMessage.getDeviceId(), canMessage.getTopicId());
     ConversionConfig conversionConfig = can2Mqtt.get(canMessage.getTopicId());
     if (conversionConfig == null) {
@@ -82,21 +93,23 @@ public class Gateway {
       return;
     }
 
-    String mqttTopic = injectDeviceIdIntoMqttTopic(conversionConfig.getMqttTopic(), canMessage.getDeviceId());
+    MqttTopic mqttTopic = new MqttTopic(conversionConfig.getMqttTopic());
+    mqttTopic.injectValues("deviceId", canMessage.getDeviceId());
 
-    if (conversionConfig.getConverter().equals("heartbeat")) {
-      heartBeatService.refreshDeviceTimestamp(Instant.now(), mqttTopic);
+    String converter = conversionConfig.getConverter();
+
+    if (converter.equals("heartbeat")) {
+      heartBeatService.refreshDeviceTimestamp(Instant.now(), mqttTopic.getTopic());
+    } else if (converter.startsWith("config")) {
+      discoveryManager.configure(converter.substring(converter.indexOf("/") + 1), can2Mqtt, canMessage);
     } else {
-      byte[] payload = toMqttPayload(canMessage, conversionConfig.getConverter());
+      byte[] payload = toMqttPayload(canMessage, converter);
 
       logger.debug("can message publishing to {}", mqttTopic);
 
-      mqttClient.publishWith()
-          .topic(mqttTopic)
-          .payload(payload)
-          .qos(MqttQos.AT_MOST_ONCE)
-          .send();
+      mqttManager.publishMqttMessage(mqttTopic.getTopic(), payload);
     }
+
   }
 
   public void processIncomingMqttMessage(Mqtt5Publish mqttMessage, String originalTopic) {
@@ -108,6 +121,9 @@ public class Gateway {
     }
     if (!conversionConfig.getConverter().equals("heartbeat")) {
       CanMessage canMessage = toCan(mqttMessage, conversionConfig.getConverter());
+      if (canMessage == null) {
+        return;
+      }
       try {
         int topicId = conversionConfig.getCanTopic();
         Integer deviceId = canMqttTopicConverter.getDeviceId(originalTopic, mqttMessage.getTopic().toString());
@@ -141,6 +157,9 @@ public class Gateway {
     case "uint16ToNumber":
       payload = gatewayConverter.numberToUint16(mqttPayloadString);
       break;
+    case "config/binary_sensor":
+    case "config/switch":
+      return null;
     default:
       throw new UnsupportedOperationException(converter);
     }
@@ -164,14 +183,6 @@ public class Gateway {
       throw new UnsupportedOperationException(converter);
     }
     return payload;
-  }
-
-  private String injectDeviceIdIntoMqttTopic(String topic, int deviceId) {
-    Map<String, String> valuesMap = new HashMap<>();
-    valuesMap.put("deviceId", Integer.toString(deviceId));
-    StringSubstitutor s = new StringSubstitutor(valuesMap);
-
-    return s.replace(topic);
   }
 
 }
