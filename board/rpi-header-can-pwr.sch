@@ -2332,14 +2332,14 @@ Source: 008-0260-0_E.pdf</description>
 <package name="POWERSO-8">
 <description>PowerSO-8
 Like SOIC-8, but with a heatsink layer</description>
-<smd name="1" x="-1.879" y="-2.5" dx="1.77" dy="0.5" layer="1" rot="R90"/>
-<smd name="2" x="-0.625" y="-2.5" dx="1.77" dy="0.5" layer="1" rot="R90"/>
-<smd name="3" x="0.644" y="-2.5" dx="1.87" dy="0.5" layer="1" rot="R90"/>
-<smd name="4" x="1.913" y="-2.5" dx="1.77" dy="0.5" layer="1" rot="R90"/>
-<smd name="5" x="1.918" y="2.65" dx="1.77" dy="0.5" layer="1" rot="R90"/>
-<smd name="6" x="0.649" y="2.65" dx="1.77" dy="0.5" layer="1" rot="R90"/>
-<smd name="7" x="-0.626" y="2.65" dx="1.77" dy="0.5" layer="1" rot="R90"/>
-<smd name="8" x="-1.879" y="2.65" dx="1.77" dy="0.5" layer="1" rot="R90"/>
+<smd name="1" x="-1.879" y="-2.754" dx="2.286" dy="0.5" layer="1" rot="R90"/>
+<smd name="2" x="-0.625" y="-2.754" dx="2.278" dy="0.5" layer="1" rot="R90"/>
+<smd name="3" x="0.644" y="-2.754" dx="2.378" dy="0.5" layer="1" rot="R90"/>
+<smd name="4" x="1.913" y="-2.754" dx="2.278" dy="0.5" layer="1" rot="R90"/>
+<smd name="5" x="1.918" y="2.904" dx="2.278" dy="0.5" layer="1" rot="R90"/>
+<smd name="6" x="0.649" y="2.904" dx="2.278" dy="0.5" layer="1" rot="R90"/>
+<smd name="7" x="-0.626" y="2.904" dx="2.278" dy="0.5" layer="1" rot="R90"/>
+<smd name="8" x="-1.879" y="2.904" dx="2.278" dy="0.5" layer="1" rot="R90"/>
 <wire x1="-2.5" y1="2" x2="2.4" y2="2" width="0.127" layer="51"/>
 <wire x1="2.4" y1="2" x2="2.4" y2="-1.9" width="0.127" layer="51"/>
 <wire x1="2.4" y1="-1.9" x2="-2.2" y2="-1.9" width="0.127" layer="51"/>
