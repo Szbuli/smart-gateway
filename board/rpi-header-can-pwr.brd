@@ -188,17 +188,16 @@
 <wire x1="0" y1="56.5" x2="0" y2="0" width="0" layer="20"/>
 <text x="74.8" y="11.2" size="0.8128" layer="121" rot="R90">SN65HVD</text>
 <text x="72.5" y="36" size="0.8128" layer="121" rot="R90">MCP2515</text>
-<text x="61.78" y="45.56" size="0.8128" layer="121">R2</text>
+<text x="62.03" y="45.26" size="0.8128" layer="121">R2</text>
 <text x="57.43" y="44.49" size="0.8128" layer="121">C1</text>
 <text x="55.09" y="44.4" size="0.8128" layer="121">C2</text>
 <text x="71.9" y="4.1" size="0.8128" layer="121">C1</text>
 <text x="74.4" y="4.1" size="0.8128" layer="121">C2</text>
 <text x="65.28" y="17.97" size="0.8128" layer="121">slope(R22)</text>
-<circle x="67.5" y="11.4" radius="0.412309375" width="0.3048" layer="121"/>
 <text x="60.4" y="12.4" size="0.8128" layer="121">D2</text>
 <text x="19.085" y="46.1866" size="1.524" layer="200" font="vector" rot="R180">can rpi
 header
-2021.03.11
+2021.03.14
 v1.6</text>
 <rectangle x1="59.5314" y1="3.4822" x2="59.887" y2="3.533" layer="200" rot="R90"/>
 <rectangle x1="59.1758" y1="3.6854" x2="60.141" y2="3.7362" layer="200" rot="R90"/>
@@ -1970,7 +1969,7 @@ v1.6</text>
 <text x="51.88" y="28.67" size="0.8128" layer="122" rot="MR0">C11</text>
 <text x="53.83" y="28.75" size="0.8128" layer="122" rot="MR0">C4</text>
 <text x="48.82" y="32.16" size="1.016" layer="122" rot="MR0">ST1S10</text>
-<text x="41.5" y="37" size="0.8128" layer="122" rot="MR0">R3</text>
+<text x="40.71" y="37" size="0.8128" layer="122" rot="MR0">R3</text>
 <text x="43.23" y="21.62" size="0.8128" layer="122" rot="MR0">R18</text>
 <text x="55.2" y="11.7" size="0.8128" layer="121">FUSE
 1.35A</text>
@@ -1985,9 +1984,9 @@ v1.6</text>
 <text x="19.17" y="52.45" size="1.4224" layer="121">12V</text>
 <text x="2.47" y="52.82" size="1.4224" layer="121">GND</text>
 <text x="33.1" y="33.4" size="0.8128" layer="121" rot="R180">D4</text>
-<text x="36.16" y="24.41" size="0.8128" layer="121" rot="R180">R5</text>
+<text x="36.32" y="24.41" size="0.8128" layer="121" rot="R180">R5</text>
 <text x="35.04" y="21.24" size="0.8128" layer="121">R2</text>
-<text x="35.13" y="19.29" size="0.8128" layer="121">C9</text>
+<text x="35.02" y="19.29" size="0.8128" layer="121">C9</text>
 <text x="11.58" y="23.11" size="0.8128" layer="121">R15</text>
 <text x="2.56" y="20.59" size="1.016" layer="122" rot="MR90">TAMPER</text>
 <text x="22.2" y="52.4" size="0.8128" layer="122" rot="MR180">R5</text>
@@ -1997,7 +1996,7 @@ v1.6</text>
 <hole x="83.5" y="29.5" drill="3"/>
 <hole x="25.5" y="29.5" drill="3"/>
 <text x="43.33" y="6.17" size="0.8128" layer="121">R21</text>
-<text x="50.8" y="15.6" size="0.8128" layer="122" rot="MR0">D6</text>
+<text x="51.29" y="15.64" size="0.8128" layer="122" rot="MR0">D6</text>
 <text x="40" y="45.5" size="1.016" layer="121">i2c
 pullups</text>
 <text x="35.9" y="43.8" size="0.8128" layer="121">R1</text>
@@ -2008,9 +2007,9 @@ pullups</text>
 <text x="26.2" y="46.1" size="0.8128" layer="122" rot="MR180">T2</text>
 <text x="19.3" y="54.3" size="1.4224" layer="122" rot="MR180">12V</text>
 <text x="6.46" y="52.78" size="1.4224" layer="122" rot="MR0">GND</text>
-<text x="47.28" y="40.81" size="0.8128" layer="122" rot="MR0">L1</text>
-<text x="52.34" y="45.38" size="0.8128" layer="121">R2</text>
-<text x="34.85" y="25.68" size="0.8128" layer="121">R9</text>
+<text x="47.25" y="41.35" size="0.8128" layer="122" rot="MR0">L1</text>
+<text x="52.34" y="45.18" size="0.8128" layer="121">R2</text>
+<text x="34.92" y="25.66" size="0.8128" layer="121">R9</text>
 <text x="59.9" y="22.2" size="0.8128" layer="122" rot="MR270" align="bottom-right">RFM69HW</text>
 <text x="6.14" y="46.31" size="1.4224" layer="122" distance="12" rot="MR0">lora
 ant</text>
