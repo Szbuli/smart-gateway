@@ -3,7 +3,15 @@ package hu.szbuli.smarthome.can;
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import tel.schich.javacan.CanFrame;
+import tel.schich.javacan.RawCanChannel;
+
 public class CanSendThread extends SafeThread {
+
+  private static final Logger logger = LoggerFactory.getLogger(CanSendThread.class);
 
   private static int maxQueueSize = 100;
 
@@ -13,24 +21,24 @@ public class CanSendThread extends SafeThread {
   public void doRun() {
     CanMessage message;
 
-    CanConnectionService canService = new CanConnectionServiceImpl();
+    RawCanChannel channel = null;
     try {
-      canService.connectCanSocket();
+      channel = CanConnectionHelper.getChannel();
 
       while (true) {
         message = CanSendThread.sendCanQueue.take();
-        canService.sendCanMessage("can0", message.getExtId(), false, message.getData());
+        CanFrame frame = CanFrame.createExtended(message.getExtId(), CanFrame.FD_NO_FLAGS, message.getData());
+
+        channel.write(frame);
       }
-    } catch (IOException e2) {
-      e2.printStackTrace();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    } catch (IOException | InterruptedException e) {
+      logger.error("failed to start can send thread", e);
     } finally {
-      if (canService != null) {
+      if (channel != null) {
         try {
-          canService.disconnectCanSocket();
+          channel.close();
         } catch (IOException e) {
-          e.printStackTrace();
+          logger.error("cannot close socket at can send thread", e);
         }
       }
     }

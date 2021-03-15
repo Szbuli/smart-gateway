@@ -18,11 +18,15 @@ repositories {
    flatDir {
        dirs 'lib'
    }
-
 }
 
 dependencies {
-	implementation files('lib/libsocket-can-java.jar')
+	implementation files('lib/javacan-core-3.0.0-20210308.011942-7-armv6.jar')
+	implementation files('lib/javacan-core-3.0.0-20210308.011942-7.jar')
+	implementation files('lib/javacan-core-3.0.0-20210308.011942-7-armv7.jar')
+
+//	compile group: 'tel.schich', name: 'javacan-core', version: '3.0.0-SNAPSHOT:armv6'
+//	compile group: 'tel.schich', name: 'javacan-core', version: '3.0.0-SNAPSHOT'
 
 	compile group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.2.1'
 	
