@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import hu.szbuli.smarthome.can.SafeThread;
 import hu.szbuli.smarthome.mqtt.MqttManager;
+import hu.szbuli.smarthome.rpi.mqtt.proxy.MqttConfiguration;
 
 public class HeartBeatService extends SafeThread {
 
@@ -19,12 +20,14 @@ public class HeartBeatService extends SafeThread {
   public static final byte[] OFFLINE_PAYLOAD = "offline".getBytes();
 
   private Map<String, Instant> heartbeatMap;
-  private MqttManager mqttManager;
+  private Map<String, MqttManager> gatewayClientMap;
+  private MqttConfiguration mqttConfiguration;
 
-  public HeartBeatService(MqttManager mqttManager) {
+  public HeartBeatService(MqttConfiguration mqttConfiguration) {
     super();
-    heartbeatMap = new HashMap<>();
-    this.mqttManager = mqttManager;
+    this.heartbeatMap = new HashMap<>();
+    this.gatewayClientMap = new HashMap<>();
+    this.mqttConfiguration = mqttConfiguration;
   }
 
   @Override
@@ -38,7 +41,8 @@ public class HeartBeatService extends SafeThread {
           Entry<String, Instant> entry = it.next();
           if (Duration.between(entry.getValue(), currentTime).compareTo(Duration.ofSeconds(MAX_IDLE_TIME_SECONDS)) > 0) {
             it.remove();
-            mqttManager.publishMqttMessage(entry.getKey(), OFFLINE_PAYLOAD, true);
+            MqttManager mqttManager = gatewayClientMap.remove(entry.getKey());
+            mqttManager.disconnect();
           }
         }
 
@@ -57,7 +61,9 @@ public class HeartBeatService extends SafeThread {
 
   synchronized public void refreshDeviceTimestamp(Instant time, String mqttTopic) {
     if (!heartbeatMap.containsKey(mqttTopic)) {
-      mqttManager.publishMqttMessage(mqttTopic, ONLINE_PAYLOAD, true);
+      MqttManager mqttManager = new MqttManager(this.mqttConfiguration, mqttTopic);
+      mqttManager.connect(true, false);
+      gatewayClientMap.put(mqttTopic, mqttManager);
     }
     heartbeatMap.put(mqttTopic, time);
   }

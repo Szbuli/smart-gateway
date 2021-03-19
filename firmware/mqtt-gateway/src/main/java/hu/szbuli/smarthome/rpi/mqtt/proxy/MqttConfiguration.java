@@ -5,7 +5,6 @@ public class MqttConfiguration {
   private int port;
   private String username;
   private String password;
-  private String statusTopic;
 
   public String getHost() {
     return host;
@@ -37,14 +36,6 @@ public class MqttConfiguration {
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public String getStatusTopic() {
-    return statusTopic;
-  }
-
-  public void setStatusTopic(String statusTopic) {
-    this.statusTopic = statusTopic;
   }
 
 }

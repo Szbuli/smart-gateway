@@ -45,14 +45,12 @@ public class Gateway {
   private DiscoveryManager discoveryManager;
 
   public Gateway(String configFile, MqttManager mqttManager, DiscoveryManager discoveryManager,
-      BlockingQueue<CanMessage> sendCanQueue) throws IOException {
+      HeartBeatService heartBeatService, BlockingQueue<CanMessage> sendCanQueue) throws IOException {
     this.mqttManager = mqttManager;
     this.sendCanQueue = sendCanQueue;
 
     this.discoveryManager = discoveryManager;
-
-    heartBeatService = new HeartBeatService(mqttManager);
-    heartBeatService.start();
+    this.heartBeatService = heartBeatService;
 
     Reader in = new FileReader(new File(configFile).getAbsolutePath());
     Iterable<CSVRecord> records = CSVFormat.DEFAULT.withHeader(HEADERS).withFirstRecordAsHeader().parse(in);
@@ -71,18 +69,18 @@ public class Gateway {
     }
 
     mqtt2Can.entrySet().stream()
-    .filter(config -> {
-      return !config.getValue().getConverter().startsWith("config");
-    })
-    .forEach(config -> {
-      MqttListener mqttListener = new MqttListener(mqttManager.getMqttClient(), this, config.getKey());
+        .filter(config -> {
+          return !config.getValue().getConverter().startsWith("config");
+        })
+        .forEach(config -> {
+          MqttListener mqttListener = new MqttListener(mqttManager.getMqttClient(), this, config.getKey());
 
-      Map<String, String> valuesMap = new HashMap<>();
-      valuesMap.put("deviceId", "+");
-      valuesMap.put("sensorId", "+");
-      StringSubstitutor s = new StringSubstitutor(valuesMap);
-      mqttListener.subscribe(s.replace(config.getKey()));
-    });
+          Map<String, String> valuesMap = new HashMap<>();
+          valuesMap.put("deviceId", "+");
+          valuesMap.put("sensorId", "+");
+          StringSubstitutor s = new StringSubstitutor(valuesMap);
+          mqttListener.subscribe(s.replace(config.getKey()));
+        });
   }
 
   public void processIncomingCanMessage(CanMessage canMessage) throws JsonProcessingException {
