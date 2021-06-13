@@ -12009,14 +12009,14 @@ Source: www.tycoelectronics.com .. ENG_DS_1654001_1099_RJ_L_0507.pdf</descriptio
 <pinref part="R12" gate="G$1" pin="2"/>
 </segment>
 </net>
-<net name="SDA" class="0">
+<net name="I2C_SDA" class="0">
 <segment>
 <wire x1="12.7" y1="53.34" x2="5.08" y2="53.34" width="0.1524" layer="91"/>
 <label x="5.08" y="53.34" size="1.778" layer="95"/>
 <pinref part="U5" gate="G$1" pin="SDA"/>
 </segment>
 </net>
-<net name="SCL" class="0">
+<net name="I2C_SCL" class="0">
 <segment>
 <wire x1="12.7" y1="55.88" x2="5.08" y2="55.88" width="0.1524" layer="91"/>
 <label x="5.08" y="55.88" size="1.778" layer="95"/>
