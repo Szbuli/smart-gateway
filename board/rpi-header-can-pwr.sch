@@ -5458,20 +5458,20 @@ with 3 drill holes (top left hole is missing to allow routing of power supply li
 <pad name="38" x="54.09" y="53.77" drill="1" diameter="1.778"/>
 <pad name="39" x="56.63" y="51.23" drill="1" diameter="1.778"/>
 <pad name="40" x="56.63" y="53.77" drill="1" diameter="1.778"/>
-<wire x1="7.1" y1="55.04" x2="7.1" y2="52.5" width="0.127" layer="21"/>
-<wire x1="7.1" y1="52.5" x2="7.1" y2="49.96" width="0.127" layer="21"/>
-<wire x1="7.1" y1="49.96" x2="8.0525" y2="49.96" width="0.127" layer="21"/>
-<wire x1="8.0525" y1="49.96" x2="8.6875" y2="49.96" width="0.127" layer="21"/>
-<wire x1="8.6875" y1="49.96" x2="9.64" y2="49.96" width="0.127" layer="21"/>
-<wire x1="9.64" y1="49.96" x2="57.9" y2="49.96" width="0.127" layer="21"/>
-<wire x1="57.9" y1="49.96" x2="57.9" y2="55.04" width="0.127" layer="21"/>
-<wire x1="57.9" y1="55.04" x2="7.1" y2="55.04" width="0.127" layer="21"/>
-<wire x1="7.1" y1="52.5" x2="9.64" y2="52.5" width="0.127" layer="21"/>
-<wire x1="9.64" y1="52.5" x2="9.64" y2="49.96" width="0.127" layer="21"/>
-<wire x1="8.0525" y1="49.96" x2="8.0525" y2="49.6425" width="0.127" layer="21"/>
-<wire x1="8.0525" y1="49.6425" x2="8.6875" y2="49.6425" width="0.127" layer="21"/>
-<wire x1="8.6875" y1="49.6425" x2="8.6875" y2="49.96" width="0.127" layer="21"/>
-<text x="8.0525" y="48.3725" size="1.016" layer="21" font="vector" ratio="10">1</text>
+<wire x1="7.1" y1="55.04" x2="7.1" y2="52.5" width="0.127" layer="22"/>
+<wire x1="7.1" y1="52.5" x2="7.1" y2="49.96" width="0.127" layer="22"/>
+<wire x1="7.1" y1="49.96" x2="8.0525" y2="49.96" width="0.127" layer="22"/>
+<wire x1="8.0525" y1="49.96" x2="8.6875" y2="49.96" width="0.127" layer="22"/>
+<wire x1="8.6875" y1="49.96" x2="9.64" y2="49.96" width="0.127" layer="22"/>
+<wire x1="9.64" y1="49.96" x2="57.9" y2="49.96" width="0.127" layer="22"/>
+<wire x1="57.9" y1="49.96" x2="57.9" y2="55.04" width="0.127" layer="22"/>
+<wire x1="57.9" y1="55.04" x2="7.1" y2="55.04" width="0.127" layer="22"/>
+<wire x1="7.1" y1="52.5" x2="9.64" y2="52.5" width="0.127" layer="22"/>
+<wire x1="9.64" y1="52.5" x2="9.64" y2="49.96" width="0.127" layer="22"/>
+<wire x1="8.0525" y1="49.96" x2="8.0525" y2="49.6425" width="0.127" layer="22"/>
+<wire x1="8.0525" y1="49.6425" x2="8.6875" y2="49.6425" width="0.127" layer="22"/>
+<wire x1="8.6875" y1="49.6425" x2="8.6875" y2="49.96" width="0.127" layer="22"/>
+<text x="8.0525" y="48.3725" size="1.016" layer="22" font="vector" ratio="10" rot="MR0" align="bottom-center">1</text>
 <circle x="3.5" y="3.5" radius="3.1" width="0.127" layer="52"/>
 <circle x="61.5" y="3.5" radius="3.1" width="0.127" layer="52"/>
 <circle x="61.5" y="52.5" radius="3.1" width="0.127" layer="52"/>
