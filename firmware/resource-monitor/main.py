@@ -11,10 +11,10 @@ from timeloop import Timeloop
 from datetime import timedelta
 
 tl = Timeloop()
-rpi_status: RpiStatus
-bme_280: BME280
+rpi_status: RpiStatus = None
+bme_280: BME280 = None
 tamper: Tamper
-ina219: INA219
+ina219: INA219 = None
 
 
 def start():
