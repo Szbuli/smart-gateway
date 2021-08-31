@@ -6,6 +6,7 @@ from rpi_status import RpiStatus
 from bme280 import BME280
 from tamper import Tamper
 from ina219 import INA219
+from vent import Vent
 
 from timeloop import Timeloop
 from datetime import timedelta
@@ -53,6 +54,9 @@ def start():
     if config.has_option('sensors','voltageTopic') and config.has_option('sensors', 'currentTopic') and config.has_option('sensors', 'powerTopic'):
         global ina219
         ina219 = INA219(mqtt_client, config['sensors']['voltageTopic'], config['sensors']['currentTopic'], config['sensors']['powerTopic'])
+
+    if config.has_option('sensors','ventTopic'):    
+        vent = Vent(mqtt_client, config['sensors']['ventTopic'])
 
     tl.start()
 

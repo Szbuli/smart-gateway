@@ -16,3 +16,4 @@ humidityTopic=smarthome/rpi/dev/humidity
 voltageTopic=smarthome/rpi/dev/voltage
 currentTopic=smarthome/rpi/dev/current
 powerTopic=smarthome/rpi/dev/power
+ventTopic=smarthome/rpi/dev/vent
