@@ -11,10 +11,10 @@ from timeloop import Timeloop
 from datetime import timedelta
 
 tl = Timeloop()
-rpi_status: RpiStatus = None
-bme_280: BME280 = None
-tamper: Tamper
-ina219: INA219 = None
+rpi_status = None
+bme_280 = None
+tamper = None
+ina219 = None
 
 
 def start():
@@ -61,13 +61,13 @@ def start():
 
 @tl.job(interval=timedelta(seconds=60))
 def read_and_publish():
-    if rpi_status != None:
+    if rpi_status is not None:
         rpi_status.read_and_publish()
 
-    if bme_280 != None:
+    if bme_280 is not None:
         bme_280.read_and_publish()
 
-    if ina219 != None:
+    if ina219 is not None:
         ina219.read_and_publish()
 
 
