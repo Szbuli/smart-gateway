@@ -1,6 +1,6 @@
 import board
 import busio
-import adafruit_bme280
+from adafruit_bme280 import advanced as adafruit_bme280
 
 
 class BME280:
