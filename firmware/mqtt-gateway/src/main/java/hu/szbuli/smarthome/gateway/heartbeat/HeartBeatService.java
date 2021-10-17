@@ -22,9 +22,9 @@ public class HeartBeatService extends SafeThread {
 
   private static final int MAX_IDLE_TIME_SECONDS = 70;
 
-  public static final byte[] ONLINE_PAYLOAD = Availability.ONLINE.toString()
+  public static final byte[] ONLINE_PAYLOAD = Availability.online.toString()
       .getBytes();
-  public static final byte[] OFFLINE_PAYLOAD = Availability.OFFLINE.toString()
+  public static final byte[] OFFLINE_PAYLOAD = Availability.offline.toString()
       .getBytes();
 
   private Map<String, Instant> heartbeatMap;
