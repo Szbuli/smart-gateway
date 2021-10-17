@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import hu.szbuli.smarthome.can.SafeThread;
+import hu.szbuli.smarthome.gateway.state.Availability;
 import hu.szbuli.smarthome.mqtt.MqttManager;
 import hu.szbuli.smarthome.rpi.mqtt.proxy.MqttConfiguration;
 
@@ -21,8 +22,10 @@ public class HeartBeatService extends SafeThread {
 
   private static final int MAX_IDLE_TIME_SECONDS = 70;
 
-  public static final byte[] ONLINE_PAYLOAD = "online".getBytes();
-  public static final byte[] OFFLINE_PAYLOAD = "offline".getBytes();
+  public static final byte[] ONLINE_PAYLOAD = Availability.online.toString()
+      .getBytes();
+  public static final byte[] OFFLINE_PAYLOAD = Availability.offline.toString()
+      .getBytes();
 
   private Map<String, Instant> heartbeatMap;
   private Map<String, MqttManager> gatewayClientMap;
@@ -41,10 +44,12 @@ public class HeartBeatService extends SafeThread {
       while (true) {
         Instant currentTime = Instant.now();
 
-        Iterator<Entry<String, Instant>> it = heartbeatMap.entrySet().iterator();
+        Iterator<Entry<String, Instant>> it = heartbeatMap.entrySet()
+            .iterator();
         while (it.hasNext()) {
           Entry<String, Instant> entry = it.next();
-          if (Duration.between(entry.getValue(), currentTime).compareTo(Duration.ofSeconds(MAX_IDLE_TIME_SECONDS)) > 0) {
+          if (Duration.between(entry.getValue(), currentTime)
+              .compareTo(Duration.ofSeconds(MAX_IDLE_TIME_SECONDS)) > 0) {
             logger.debug("connected device went offline: {}", entry.getKey());
             it.remove();
             MqttManager mqttManager = gatewayClientMap.remove(entry.getKey());

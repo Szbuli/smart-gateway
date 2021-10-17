@@ -22,8 +22,12 @@ public class MqttTopic {
   }
 
   public MqttTopic injectValues(String name, int value) {
+    return injectValues(name, Integer.toString(value));
+  }
+
+  public MqttTopic injectValues(String name, String value) {
     Map<String, String> valuesMap = new HashMap<>();
-    valuesMap.put(name, Integer.toString(value));
+    valuesMap.put(name, value);
     StringSubstitutor s = new StringSubstitutor(valuesMap);
 
     this.topic = s.replace(topic);

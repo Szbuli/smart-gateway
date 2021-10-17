@@ -20,6 +20,7 @@ import hu.szbuli.smarthome.can.CanSendThread;
 import hu.szbuli.smarthome.gateway.heartbeat.HeartBeatService;
 import hu.szbuli.smarthome.gateway.homeassistant.DeviceType;
 import hu.szbuli.smarthome.gateway.homeassistant.DiscoveryManager;
+import hu.szbuli.smarthome.gateway.stat.MessageStats;
 import hu.szbuli.smarthome.mqtt.MqttManager;
 
 public class Main {
@@ -40,7 +41,8 @@ public class Main {
     Properties prop = new Properties();
     prop.load(new FileInputStream(mqttConfigFile));
 
-    String healthStatusTopic = prop.getProperty("statusTopic");
+    String mqttBaseTopic = prop.getProperty("mqttBaseTopic");
+    String gatewayName = prop.getProperty("gatewayName");
 
     MqttConfiguration mqttConfiguration = new MqttConfiguration();
     mqttConfiguration.setHost(prop.getProperty("host"));
@@ -48,26 +50,33 @@ public class Main {
     mqttConfiguration.setUsername(prop.getProperty("username"));
     mqttConfiguration.setPassword(prop.getProperty("password"));
 
-    MqttManager mqttManager = new MqttManager(mqttConfiguration, healthStatusTopic);
+    MqttManager mqttManager = new MqttManager(mqttConfiguration, mqttBaseTopic, gatewayName);
     mqttManager.connect(true, true);
 
+    MessageStats messageStats = new MessageStats(mqttManager);
+    mqttManager.setMessageStats(messageStats);
+
     DeviceType[] deviceTypes = parseDeviceTypes(deviceTypesConfigFile);
-    DiscoveryManager discoveryManager = new DiscoveryManager(mqttManager, deviceTypes, prop.getProperty("gatewayName"));
+    DiscoveryManager discoveryManager = new DiscoveryManager(mqttManager, deviceTypes, gatewayName);
+
     HeartBeatService heartBeatService = new HeartBeatService(mqttConfiguration);
     heartBeatService.start();
 
-    Gateway gateway = new Gateway(gatewayConfigFile, mqttManager, discoveryManager, heartBeatService, CanSendThread.sendCanQueue);
+    Gateway gateway = new Gateway(gatewayConfigFile, mqttManager, discoveryManager,
+        heartBeatService, CanSendThread.sendCanQueue, messageStats);
 
-    CanSendThread canSendThread = new CanSendThread();
+    CanSendThread canSendThread = new CanSendThread(messageStats);
     canSendThread.start();
 
-    CanReceiveThread canRecieveThread = new CanReceiveThread(gateway);
+    CanReceiveThread canRecieveThread = new CanReceiveThread(gateway, messageStats);
     canRecieveThread.start();
   }
 
-  private static DeviceType[] parseDeviceTypes(String deviceTypesConfigFile) throws JsonParseException, JsonMappingException, IOException {
+  private static DeviceType[] parseDeviceTypes(String deviceTypesConfigFile)
+      throws JsonParseException, JsonMappingException, IOException {
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(Paths.get(deviceTypesConfigFile).toFile(), DeviceType[].class);
+    return objectMapper.readValue(Paths.get(deviceTypesConfigFile)
+        .toFile(), DeviceType[].class);
   }
 
 }

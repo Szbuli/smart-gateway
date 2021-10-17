@@ -26,7 +26,7 @@ public class CanConnectionServiceImpl implements CanConnectionService {
       try {
         this.socket.close();
       } catch (IOException e) {
-        s_logger.error("Error closing CAN socket");
+        s_logger.error("Error closing CAN socket", e);
       }
     }
   }
@@ -46,7 +46,8 @@ public class CanConnectionServiceImpl implements CanConnectionService {
   }
 
   @Override
-  public void sendCanMessage(String ifName, int canId, boolean isRTR, byte[] message) throws IOException {
+  public void sendCanMessage(String ifName, int canId, boolean isRTR, byte[] message)
+      throws IOException {
     if (message.length > 8) {
       // throw new KuraException(KuraErrorCode.OPERATION_NOT_SUPPORTED,
       // "CAN send : Incorrect frame length");
@@ -63,7 +64,7 @@ public class CanConnectionServiceImpl implements CanConnectionService {
       }
       socket.send(new CanFrame(canif, canIdObject, message));
     } catch (IOException e) {
-      s_logger.error("Error on CanSocket in sendCanMessage: {}", e.getMessage());
+      s_logger.error("Error on CanSocket in sendCanMessage: {}", e);
       throw e;
     }
   }
@@ -83,7 +84,7 @@ public class CanConnectionServiceImpl implements CanConnectionService {
       cm.setRtr(ci.isSetRTR());
       return cm;
     } catch (IOException e) {
-      s_logger.error("Error on CanSocket in receiveCanMessage: {}", e.getMessage());
+      s_logger.error("Error on CanSocket in receiveCanMessage: {}", e);
       throw e;
     }
   }
