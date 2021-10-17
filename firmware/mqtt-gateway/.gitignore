@@ -5,3 +5,4 @@ config.csv
 /.settings/
 .classpath
 deviceTypes.json
+/build/

@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import hu.szbuli.smarthome.gateway.stat.MessageStats;
 import hu.szbuli.smarthome.rpi.mqtt.proxy.Gateway;
 
 public class CanReceiveThread extends SafeThread {
@@ -12,9 +12,11 @@ public class CanReceiveThread extends SafeThread {
   private static final Logger logger = LoggerFactory.getLogger(CanReceiveThread.class);
 
   private Gateway gateway;
+  private MessageStats messageStats;
 
-  public CanReceiveThread(Gateway gateway) {
+  public CanReceiveThread(Gateway gateway, MessageStats messageStats) {
     this.gateway = gateway;
+    this.messageStats = messageStats;
   }
 
   @Override
@@ -29,7 +31,8 @@ public class CanReceiveThread extends SafeThread {
             CanMessage message = canService.receiveCanMessage(-1, 0);
             gateway.processIncomingCanMessage(message);
           } catch (Exception e) {
-            logger.error("error happened when processing incoming can message", e);
+            messageStats.canError();
+            logger.error("can receive error", e);
           }
         }
       } catch (IOException e) {
@@ -40,8 +43,7 @@ public class CanReceiveThread extends SafeThread {
 
   @Override
   public void setThreadName() {
-    this.threadName = "CAN_RECIEVE_THREAD";
-
+    this.threadName = "CAN_RECEIVE_THREAD";
   }
 
 }

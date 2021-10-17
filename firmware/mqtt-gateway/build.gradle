@@ -6,8 +6,10 @@
  * user guide available at https://docs.gradle.org/4.3/userguide/java_library_plugin.html
  */
 
-// Apply the java-library plugin to add support for Java Library
-apply plugin: 'java'
+plugins {
+	id 'java'
+	id "com.github.johnrengelman.shadow" version "7.1.0"
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -41,3 +43,17 @@ dependencies {
 	testImplementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
 }
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'hu.szbuli.smarthome.rpi.mqtt.proxy.Main'
+	}
+}
+
+shadowJar {
+	archiveFileName = "${project.name}.${extension}"
+}
