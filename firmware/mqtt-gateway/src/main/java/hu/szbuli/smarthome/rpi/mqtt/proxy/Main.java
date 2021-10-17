@@ -58,7 +58,7 @@ public class Main {
 
     DeviceType[] deviceTypes = parseDeviceTypes(deviceTypesConfigFile);
     DiscoveryManager discoveryManager = new DiscoveryManager(mqttManager, deviceTypes, gatewayName);
-    discoveryManager.publishSelf();
+
     HeartBeatService heartBeatService = new HeartBeatService(mqttConfiguration);
     heartBeatService.start();
 
