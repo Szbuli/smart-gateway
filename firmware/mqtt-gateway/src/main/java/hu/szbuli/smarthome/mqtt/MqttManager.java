@@ -128,4 +128,8 @@ public class MqttManager {
     this.messageStats = messageStats;
   }
 
+  public String getStatusTopic() {
+    return statusTopic;
+  }
+
 }

@@ -4,26 +4,26 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Properties;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import hu.szbuli.smarthome.can.CanReceiveThread;
 import hu.szbuli.smarthome.can.CanSendThread;
 import hu.szbuli.smarthome.gateway.heartbeat.HeartBeatService;
 import hu.szbuli.smarthome.gateway.homeassistant.DeviceType;
 import hu.szbuli.smarthome.gateway.homeassistant.DiscoveryManager;
+import hu.szbuli.smarthome.gateway.homeassistant.MqttGatewayDiscovery;
 import hu.szbuli.smarthome.gateway.stat.MessageStats;
 import hu.szbuli.smarthome.mqtt.MqttManager;
 
 public class Main {
+
+  public static final String VERSION = "0.0.1";
 
   public static void main(String[] args) throws IOException, ParseException {
     Options options = new Options();
@@ -58,6 +58,8 @@ public class Main {
 
     DeviceType[] deviceTypes = parseDeviceTypes(deviceTypesConfigFile);
     DiscoveryManager discoveryManager = new DiscoveryManager(mqttManager, deviceTypes, gatewayName);
+
+    new MqttGatewayDiscovery(mqttManager).publishSelf(gatewayName, VERSION);
 
     HeartBeatService heartBeatService = new HeartBeatService(mqttConfiguration);
     heartBeatService.start();

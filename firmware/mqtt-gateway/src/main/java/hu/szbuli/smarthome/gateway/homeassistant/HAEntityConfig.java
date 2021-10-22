@@ -6,14 +6,11 @@ public class HAEntityConfig {
 
   @JsonProperty("unique_id")
   private String uniqueId;
-  @JsonProperty("state_topic")
-  private String stateTopic;
-  @JsonProperty("command_topic")
-  private String commandTopic;
   @JsonProperty("availability_topic")
   private String availabilityTopic;
+
   private HADeviceConfig device;
-  private String platform;
+  private String platform = "mqtt";
   private String name;
 
   public String getUniqueId() {
@@ -22,14 +19,6 @@ public class HAEntityConfig {
 
   public void setUniqueId(String uniqueId) {
     this.uniqueId = uniqueId;
-  }
-
-  public String getStateTopic() {
-    return stateTopic;
-  }
-
-  public void setStateTopic(String stateTopic) {
-    this.stateTopic = stateTopic;
   }
 
   public String getAvailabilityTopic() {
@@ -62,14 +51,6 @@ public class HAEntityConfig {
 
   public void setName(String name) {
     this.name = name;
-  }
-
-  public String getCommandTopic() {
-    return commandTopic;
-  }
-
-  public void setCommandTopic(String commandTopic) {
-    this.commandTopic = commandTopic;
   }
 
 }
