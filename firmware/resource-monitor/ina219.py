@@ -25,6 +25,6 @@ class INA219:
         self.mqtt.publishWithBaseTopic(
             mqtt_topics.ina219VoltageTopic, str(round(bus_voltage, 2)))
         self.mqtt.publishWithBaseTopic(
-            mqtt_topics.ina219CurrentTopic, str(round(current, 2)))
+            mqtt_topics.ina219CurrentTopic, str(round(current / 1000, 2)))
         self.mqtt.publishWithBaseTopic(
             mqtt_topics.ina219PowerTopic, str(round(power, 2)))

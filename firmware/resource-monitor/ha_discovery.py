@@ -47,6 +47,7 @@ class HaDiscovery:
             'unique_id': stateTopic,
             'platform': 'mqtt',
             'name': stateTopic,
+            'state_topic': stateTopic,
             'unit_of_measurement': uom
         }
 
@@ -62,10 +63,11 @@ class HaDiscovery:
             'unique_id': stateTopic,
             'platform': 'mqtt',
             'name': stateTopic,
+            'state_topic': stateTopic
         }
 
         self.mqtt.publish(self.getHaDiscoveryTopic(
-            'binarySensor', sensorId), json.dumps(entityConfig), retain=True)
+            'binary_sensor', sensorId), json.dumps(entityConfig), retain=True)
 
     def getHaDiscoveryTopic(self, type, sensorId):
         return 'homeassistant/'+type+'/rpi_' + self.deviceName + '/' + sensorId+'/config'
