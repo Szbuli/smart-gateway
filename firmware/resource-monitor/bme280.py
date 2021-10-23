@@ -1,12 +1,11 @@
 import board
 import busio
 from adafruit_bme280 import advanced as adafruit_bme280
+import mqtt_topics
 
 
 class BME280:
-    def __init__(self, mqtt, temperatureTopic, humidityTopic):
-        self.temperatureTopic = temperatureTopic
-        self.humidityTopic = humidityTopic
+    def __init__(self, mqtt):
         self.mqtt = mqtt
         i2c = busio.I2C(board.SCL, board.SDA)
         self.bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c, address=0x76)
@@ -20,7 +19,7 @@ class BME280:
         self.bme280.overscan_temperature = adafruit_bme280.OVERSCAN_X2
 
     def read_and_publish(self):
-        self.mqtt.publish(self.temperatureTopic, str(
-            round(self.bme280.temperature, 2)))
-        self.mqtt.publish(self.humidityTopic, str(
+        self.mqtt.publishWithBaseTopic(
+            mqtt_topics.bme280TemperatureTopic, str(round(self.bme280.temperature, 2)))
+        self.mqtt.publishWithBaseTopic(mqtt_topics.bme280HumidityTopic, str(
             round(self.bme280.relative_humidity, 2)))

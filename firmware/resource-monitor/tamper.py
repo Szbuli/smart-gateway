@@ -1,14 +1,15 @@
 import threading
 import time
 import RPi.GPIO as GPIO
+import mqtt_topics
 
 tamper_pin = 17
 
+
 class Tamper:
-    def __init__(self, mqtt, tamperTopic):
+    def __init__(self, mqtt):
         self.lock = threading.Lock()
         self.mqtt = mqtt
-        self.tamperTopic = tamperTopic
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(tamper_pin, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
         GPIO.add_event_detect(
@@ -37,5 +38,5 @@ class Tamper:
                 time.sleep(0.3)
                 if self.tamper_event_happened != tamper_state:
                     self.tamper_event_happened = tamper_state
-                    self.mqtt.publish(self.tamperTopic,
-                                      "ON" if tamper_state == 1 else "OFF")
+                    self.mqtt.publishWithBaseTopic(mqtt_topics.tamperTopic,
+                                                   "ON" if tamper_state == 1 else "OFF")

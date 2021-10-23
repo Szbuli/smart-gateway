@@ -1,11 +1,12 @@
 import time
-import mqtt_manager
 import logging
 import configparser
 from rpi_status import RpiStatus
 from bme280 import BME280
 from tamper import Tamper
 from ina219 import INA219
+from mqtt_manager import MqttManager
+from ha_discovery import HaDiscovery
 
 from timeloop import Timeloop
 from datetime import timedelta
@@ -24,35 +25,36 @@ def start():
     logging.basicConfig(level=logging.getLevelName(
         config['logger']['logLevel']))
 
-    mqtt_client = mqtt_manager.init(config['mqtt']['host'],
-                                    config['mqtt']['port'],
-                                    config['mqtt']['username'],
-                                    config['mqtt']['password'])
+    deviceName = config['rpi']['deviceName']
 
-    if (config.has_option('rpi', 'coreTempTopic') and
-        config.has_option('rpi', 'averageLoadTopic') and
-        config.has_option('rpi', 'diskUsageTopic')
-        ):
-        global rpi_status
-        rpi_status = RpiStatus(
-            mqtt_client,
-            config['rpi']['coreTempTopic'],
-            config['rpi']['averageLoadTopic'],
-            config['rpi']['diskUsageTopic'])
+    mqtt_manager = MqttManager(config['mqtt']['host'],
+                               config['mqtt']['port'],
+                               config['mqtt']['username'],
+                               config['mqtt']['password'],
+                               deviceName,
+                               config['mqtt']['baseTopic'])
 
-    if config.has_option('sensors', 'temperatureTopic') and config.has_option('sensors', 'humidityTopic'):
+    ha_discovery = HaDiscovery(mqtt_manager, deviceName)
+
+    global rpi_status
+    rpi_status = RpiStatus(mqtt_manager)
+    ha_discovery.registerRpiStatus()
+
+    if config.getboolean('sensors', 'bme280'):
         global bme_280
-        bme_280 = BME280(mqtt_client, config['sensors']['temperatureTopic'],
-                         config['sensors']['humidityTopic'])
+        bme_280 = BME280(mqtt_manager)
+        ha_discovery.registerTemperature()
 
-    if config.has_option('sensors','tamperTopic'):
+    if config.getboolean('sensors', 'tamper'):
         global tamper
-        tamper = Tamper(mqtt_client, config['sensors']['tamperTopic'])
+        tamper = Tamper(mqtt_manager)
         tamper.start()
+        ha_discovery.registerTamper()
 
-    if config.has_option('sensors','voltageTopic') and config.has_option('sensors', 'currentTopic') and config.has_option('sensors', 'powerTopic'):
+    if config.getboolean('sensors', 'ina219'):
         global ina219
-        ina219 = INA219(mqtt_client, config['sensors']['voltageTopic'], config['sensors']['currentTopic'], config['sensors']['powerTopic'])
+        ina219 = INA219(mqtt_manager)
+        ha_discovery.registerPower()
 
     tl.start()
 
@@ -61,8 +63,7 @@ def start():
 
 @tl.job(interval=timedelta(seconds=60))
 def read_and_publish():
-    if rpi_status is not None:
-        rpi_status.read_and_publish()
+    rpi_status.read_and_publish()
 
     if bme_280 is not None:
         bme_280.read_and_publish()
