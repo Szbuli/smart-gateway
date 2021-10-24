@@ -1,20 +1,18 @@
 from gpiozero import CPUTemperature, DiskUsage, LoadAverage
-import paho.mqtt.client as mqtt
+import mqtt_topics
 
 
 class RpiStatus:
-    def __init__(self, mqtt, coreTempTopic, averageLoadTopic, diskUsageTopic):
-        self.coreTempTopic = coreTempTopic
-        self.averageLoadTopic = averageLoadTopic
-        self.diskUsageTopic = diskUsageTopic
+    def __init__(self, mqtt):
         self.mqtt = mqtt
         self.cpu = CPUTemperature()
         self.disk = DiskUsage()
         self.load = LoadAverage()
 
     def read_and_publish(self):
-        self.mqtt.publish(self.coreTempTopic, str(
+        self.mqtt.publishWithBaseTopic(mqtt_topics.rpiCoreTempTopic, str(
             round(self.cpu.temperature, 2)))
-        self.mqtt.publish(self.averageLoadTopic, str(
-            round(self.load.load_average * 100, 2)))
-        self.mqtt.publish(self.diskUsageTopic, str(round(self.disk.usage, 2)))
+        self.mqtt.publishWithBaseTopic(mqtt_topics.rpiAverageLoadTopic, str(
+            round(self.load.value * 100, 2)))
+        self.mqtt.publishWithBaseTopic(mqtt_topics.rpiDiskUsageTopic,
+                                       str(round(self.disk.usage, 2)))

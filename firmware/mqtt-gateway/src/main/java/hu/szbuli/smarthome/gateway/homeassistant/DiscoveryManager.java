@@ -3,14 +3,11 @@ package hu.szbuli.smarthome.gateway.homeassistant;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import hu.szbuli.smarthome.can.CanMessage;
 import hu.szbuli.smarthome.gateway.util.NumberUtils;
 import hu.szbuli.smarthome.mqtt.MqttManager;
@@ -31,22 +28,30 @@ public class DiscoveryManager {
     this.objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     this.mqttManager = mqttManager;
     this.gatewayName = gatewayName;
-    this.deviceTypeMap = Arrays.stream(deviceTypes).collect(Collectors.toMap(DeviceType::getDeviceTypeId, dt -> dt));
+    this.deviceTypeMap =
+        Arrays.stream(deviceTypes)
+            .collect(Collectors.toMap(DeviceType::getDeviceTypeId, dt -> dt));
   }
 
-  public void configure(String type, Map<Integer, ConversionConfig> can2Mqtt, CanMessage canMessage) throws JsonProcessingException {
+  public void configure(String type, Map<Integer, ConversionConfig> can2Mqtt, CanMessage canMessage)
+      throws JsonProcessingException {
     byte[] data = canMessage.getData();
     int deviceId = canMessage.getDeviceId();
     int canStateTopicId = NumberUtils.uint16ToInteger(Arrays.copyOfRange(data, 4, 6));
     int canAvailabilityTopicId = NumberUtils.uint16ToInteger(Arrays.copyOfRange(data, 6, 8));
 
-    MqttTopic haDiscoveryTopic = new MqttTopic(can2Mqtt.get(canMessage.getTopicId()).getMqttTopic());
+    MqttTopic haDiscoveryTopic =
+        new MqttTopic(can2Mqtt.get(canMessage.getTopicId())
+            .getMqttTopic());
     haDiscoveryTopic.injectValues("deviceId", deviceId);
     haDiscoveryTopic.injectValues("sensorId", canStateTopicId);
 
-    MqttTopic stateTopic = new MqttTopic(can2Mqtt.get(canStateTopicId).getMqttTopic());
+    MqttTopic stateTopic = new MqttTopic(can2Mqtt.get(canStateTopicId)
+        .getMqttTopic());
     stateTopic.injectValues("deviceId", deviceId);
-    MqttTopic availabilityTopic = new MqttTopic(can2Mqtt.get(canAvailabilityTopicId).getMqttTopic());
+    MqttTopic availabilityTopic =
+        new MqttTopic(can2Mqtt.get(canAvailabilityTopicId)
+            .getMqttTopic());
     availabilityTopic.injectValues("deviceId", deviceId);
 
     int deviceTypeId = NumberUtils.uint8ToInteger(data[3]);
@@ -54,27 +59,30 @@ public class DiscoveryManager {
 
     HADeviceConfig deviceConfig = getDeviceConfig(deviceId, deviceTypeId, version);
 
-    HAEntityConfig entityConfig = new HAEntityConfig();
+    HAEntityConfig entityConfig = createSpecificEntityConfig(type, stateTopic);
     entityConfig.setDevice(deviceConfig);
-    entityConfig.setPlatform("mqtt");
 
     entityConfig.setAvailabilityTopic(availabilityTopic.getTopic());
     entityConfig.setUniqueId(stateTopic.getTopic());
     entityConfig.setName(stateTopic.getTopic());
 
-    switch (type) {
-    case "switch":
-      entityConfig.setCommandTopic(stateTopic.getTopic());
-      break;
-    case "binary_sensor":
-      entityConfig.setStateTopic(stateTopic.getTopic());
-      break;
-    default:
-      throw new IllegalArgumentException("invalid config type " + type);
-    }
-
     String configString = objectMapper.writeValueAsString(entityConfig);
-    mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), configString.getBytes(), true);
+    mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), configString, true);
+  }
+
+  private HAEntityConfig createSpecificEntityConfig(String type, MqttTopic stateTopic) {
+    switch (type) {
+      case "switch":
+        HASwitchConfig haSwitchConfig = new HASwitchConfig();
+        haSwitchConfig.setCommandTopic(stateTopic.getTopic());
+        return haSwitchConfig;
+      case "binary_sensor":
+        HABinarySensorConfig haBinarySensorConfig = new HABinarySensorConfig();
+        haBinarySensorConfig.setStateTopic(stateTopic.getTopic());
+        return haBinarySensorConfig;
+      default:
+        throw new IllegalArgumentException("invalid config type " + type);
+    }
   }
 
   private HADeviceConfig getDeviceConfig(int deviceId, int deviceTypeId, String version) {
@@ -92,8 +100,9 @@ public class DiscoveryManager {
   }
 
   private String getVersion(byte[] data) {
-    return Integer.toString(NumberUtils.uint8ToInteger(data[0])) + "." + Integer.toString(NumberUtils.uint8ToInteger(data[1]))
-        + "." + Integer.toString(NumberUtils.uint8ToInteger(data[2]));
+    return Integer.toString(NumberUtils.uint8ToInteger(data[0])) + "."
+        + Integer.toString(NumberUtils.uint8ToInteger(data[1])) + "."
+        + Integer.toString(NumberUtils.uint8ToInteger(data[2]));
   }
 
   private DeviceType getDeviceType(int deviceTypeId) {

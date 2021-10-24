@@ -1,18 +1,16 @@
 [logger]
-loglevel = INFO
+logLevel = INFO
 [mqtt]
 host = host
 port = 1883
 username = username
 password = password
+baseTopic = smarthome/rpi/
 [rpi]
-coreTempTopic = smarthome/rpi/dev/core/temperature
-averageLoadTopic = smarthome/rpi/dev/core/load
-diskUsageTopic = smarthome/rpi/dev/core/disk/usage
+deviceName = dev
 [sensors]
-tamperTopic=smarthome/rpi/dev/tamper
-temperatureTopic=smarthome/rpi/dev/temperature
-humidityTopic=smarthome/rpi/dev/humidity
-voltageTopic=smarthome/rpi/dev/voltage
-currentTopic=smarthome/rpi/dev/current
-powerTopic=smarthome/rpi/dev/power
+bme280 = off
+ina219 = off
+tamper = off
+
+
