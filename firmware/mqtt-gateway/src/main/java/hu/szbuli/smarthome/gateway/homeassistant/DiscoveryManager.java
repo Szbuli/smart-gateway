@@ -38,7 +38,6 @@ public class DiscoveryManager {
     byte[] data = canMessage.getData();
     int deviceId = canMessage.getDeviceId();
     int canStateTopicId = NumberUtils.uint16ToInteger(Arrays.copyOfRange(data, 4, 6));
-    int canAvailabilityTopicId = NumberUtils.uint16ToInteger(Arrays.copyOfRange(data, 6, 8));
 
     MqttTopic haDiscoveryTopic =
         new MqttTopic(can2Mqtt.get(canMessage.getTopicId())
@@ -49,10 +48,6 @@ public class DiscoveryManager {
     MqttTopic stateTopic = new MqttTopic(can2Mqtt.get(canStateTopicId)
         .getMqttTopic());
     stateTopic.injectValues("deviceId", deviceId);
-    MqttTopic availabilityTopic =
-        new MqttTopic(can2Mqtt.get(canAvailabilityTopicId)
-            .getMqttTopic());
-    availabilityTopic.injectValues("deviceId", deviceId);
 
     int deviceTypeId = NumberUtils.uint8ToInteger(data[3]);
     String version = getVersion(data);
@@ -62,7 +57,16 @@ public class DiscoveryManager {
     HAEntityConfig entityConfig = createSpecificEntityConfig(type, stateTopic);
     entityConfig.setDevice(deviceConfig);
 
-    entityConfig.setAvailabilityTopic(availabilityTopic.getTopic());
+    if (canMessage.getData().length > 6) {
+      int canAvailabilityTopicId = NumberUtils.uint16ToInteger(Arrays.copyOfRange(data, 6, 8));
+
+      MqttTopic availabilityTopic = new MqttTopic(can2Mqtt.get(canAvailabilityTopicId)
+          .getMqttTopic());
+      availabilityTopic.injectValues("deviceId", deviceId);
+
+      entityConfig.setAvailabilityTopic(availabilityTopic.getTopic());
+    }
+
     entityConfig.setUniqueId(stateTopic.getTopic());
     entityConfig.setName(stateTopic.getTopic());
 
