@@ -35,6 +35,7 @@ def start():
                                config['mqtt']['baseTopic'])
 
     ha_discovery = HaDiscovery(mqtt_manager, deviceName)
+    ha_discovery.registerSelfConnectivity()
 
     global rpi_status
     rpi_status = RpiStatus(mqtt_manager)
