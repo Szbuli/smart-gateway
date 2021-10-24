@@ -30,11 +30,11 @@ public class MqttGatewayDiscovery {
     HABinarySensorConfig entityConfig = new HABinarySensorConfig();
     entityConfig.setDevice(deviceConfig);
 
-    entityConfig.setAvailabilityTopic(statusTopic);
     entityConfig.setUniqueId(statusTopic);
     entityConfig.setName(statusTopic);
 
     entityConfig.setStateTopic(statusTopic);
+    entityConfig.setDeviceClass("connectivity");
 
     entityConfig.setPayloadOn(Availability.online.toString());
     entityConfig.setPayloadOff(Availability.offline.toString());

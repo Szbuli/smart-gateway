@@ -8,6 +8,8 @@ public class HAEntityConfig {
   private String uniqueId;
   @JsonProperty("availability_topic")
   private String availabilityTopic;
+  @JsonProperty("device_class")
+  private String deviceClass;
 
   private HADeviceConfig device;
   private String platform = "mqtt";
@@ -51,6 +53,14 @@ public class HAEntityConfig {
 
   public void setName(String name) {
     this.name = name;
+  }
+
+  public String getDeviceClass() {
+    return deviceClass;
+  }
+
+  public void setDeviceClass(String deviceClass) {
+    this.deviceClass = deviceClass;
   }
 
 }
