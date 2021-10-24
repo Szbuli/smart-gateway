@@ -20,7 +20,7 @@ public class MqttGatewayDiscovery {
   }
 
   private static final String discoveryTopic =
-      "homeassistant/${type}/rpi_${deviceId}/${sensorId}/config";
+      "homeassistant/${type}/mqtt-gateway_${deviceId}/${sensorId}/config";
   private static final String model = "Mqtt gateway";
   private static final String manufacturer = "zbl";
 
