@@ -58,19 +58,31 @@ def start():
         ha_discovery.registerPower()
 
     tl.start()
+    publish_loop()
 
     mqtt_manager.loop()
 
 
-@tl.job(interval=timedelta(seconds=60))
-def read_and_publish():
-    rpi_status.read_and_publish()
+@tl.job(interval=timedelta(seconds=5))
+def read_loop():
+    rpi_status.read()
 
     if bme_280 is not None:
-        bme_280.read_and_publish()
+        bme_280.read()
 
     if ina219 is not None:
-        ina219.read_and_publish()
+        ina219.read()
+
+
+@tl.job(interval=timedelta(seconds=60))
+def publish_loop():
+    rpi_status.publish()
+
+    if bme_280 is not None:
+        bme_280.publish()
+
+    if ina219 is not None:
+        ina219.publish()
 
 
 if __name__ == '__main__':
