@@ -39,4 +39,4 @@ class Tamper:
                 if self.tamper_event_happened != tamper_state:
                     self.tamper_event_happened = tamper_state
                     self.mqtt.publishWithBaseTopic(mqtt_topics.tamperTopic,
-                                                   "ON" if tamper_state == 1 else "OFF")
+                                                   "OFF" if tamper_state == 1 else "ON")
