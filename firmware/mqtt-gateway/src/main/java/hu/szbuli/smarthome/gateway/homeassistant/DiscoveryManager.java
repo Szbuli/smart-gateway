@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.szbuli.smarthome.can.CanMessage;
+import hu.szbuli.smarthome.gateway.state.Availability;
 import hu.szbuli.smarthome.gateway.util.NumberUtils;
 import hu.szbuli.smarthome.mqtt.MqttManager;
 import hu.szbuli.smarthome.mqtt.MqttTopic;
@@ -84,6 +85,12 @@ public class DiscoveryManager {
         HABinarySensorConfig haBinarySensorConfig = new HABinarySensorConfig();
         haBinarySensorConfig.setStateTopic(stateTopic.getTopic());
         return haBinarySensorConfig;
+      case "connectivity_status":
+        HABinarySensorConfig haConnecitivityStatusConfig = new HABinarySensorConfig();
+        haConnecitivityStatusConfig.setStateTopic(stateTopic.getTopic());
+        haConnecitivityStatusConfig.setPayloadOn(Availability.online.toString());
+        haConnecitivityStatusConfig.setPayloadOff(Availability.offline.toString());
+        return haConnecitivityStatusConfig;
       default:
         throw new IllegalArgumentException("invalid config type " + type);
     }
