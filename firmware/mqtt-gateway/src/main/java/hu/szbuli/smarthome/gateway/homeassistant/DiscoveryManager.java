@@ -91,6 +91,7 @@ public class DiscoveryManager {
         haConnecitivityStatusConfig.setPayloadOn(Availability.online.toString());
         haConnecitivityStatusConfig.setPayloadOff(Availability.offline.toString());
         haConnecitivityStatusConfig.setDeviceClass("connectivity");
+
         return haConnecitivityStatusConfig;
       default:
         throw new IllegalArgumentException("invalid config type " + type);
