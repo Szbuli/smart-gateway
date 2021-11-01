@@ -2,7 +2,7 @@
 logLevel = INFO
 [mqtt]
 host = host
-port = 1883
+port = 8883
 username = username
 password = password
 baseTopic = smarthome/rpi/

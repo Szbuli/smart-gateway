@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import logging
 import mqtt_topics
+import ssl
 
 
 class MqttManager:
@@ -9,10 +10,13 @@ class MqttManager:
         self.baseTopic = baseTopic
         self.deviceName = deviceName
 
+        context = ssl.create_default_context()
+
         logging.info("init mqtt...")
         self.client.on_connect = self.on_connect
         self.client.on_disconnect = self.on_disconnect
         self.client.username_pw_set(username, password)
+        self.client.tls_set_context(context=context)
         self.client.will_set(self.getStatusTopic(), 'offline', retain=True)
         self.client.connect(host, int(port), 20)
 

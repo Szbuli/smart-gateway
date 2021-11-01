@@ -59,8 +59,8 @@ public class MqttManager {
         .identifier(UUID.randomUUID()
             .toString())
         .serverHost(mqttConfiguration.getHost())
-        .serverPort(mqttConfiguration.getPort());
-    // .sslWithDefaultConfig()
+        .serverPort(mqttConfiguration.getPort())
+        .sslWithDefaultConfig();
 
     if (reconnect) {
       clientBuilder.automaticReconnectWithDefaultConfig();
