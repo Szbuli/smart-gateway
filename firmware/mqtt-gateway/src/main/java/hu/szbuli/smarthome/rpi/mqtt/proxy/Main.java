@@ -19,6 +19,7 @@ import hu.szbuli.smarthome.gateway.homeassistant.DeviceType;
 import hu.szbuli.smarthome.gateway.homeassistant.DiscoveryManager;
 import hu.szbuli.smarthome.gateway.homeassistant.MqttGatewayDiscovery;
 import hu.szbuli.smarthome.gateway.stat.MessageStats;
+import hu.szbuli.smarthome.lora.SocketManager;
 import hu.szbuli.smarthome.mqtt.MqttManager;
 
 public class Main {
@@ -72,6 +73,9 @@ public class Main {
 
     CanReceiveThread canRecieveThread = new CanReceiveThread(gateway, messageStats);
     canRecieveThread.start();
+
+    SocketManager loraSocketManager = new SocketManager();
+    loraSocketManager.start();
   }
 
   private static DeviceType[] parseDeviceTypes(String deviceTypesConfigFile)
