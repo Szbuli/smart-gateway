@@ -6,7 +6,7 @@ import ssl
 
 class MqttManager:
     def __init__(self, host, port, username, password, deviceName, baseTopic):
-        self.client = mqtt.Client()
+        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
         self.baseTopic = baseTopic
         self.deviceName = deviceName
 
