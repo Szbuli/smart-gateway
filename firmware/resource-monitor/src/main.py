@@ -20,7 +20,7 @@ ina219 = None
 
 def start():
     config = configparser.ConfigParser()
-    config.read('settings.ini')
+    config.read('./settings.ini')
 
     logging.basicConfig(level=logging.getLevelName(
         config['logger']['logLevel']))
