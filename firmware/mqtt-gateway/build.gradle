@@ -8,14 +8,12 @@
 
 plugins {
 	id 'java'
-	id "com.github.johnrengelman.shadow" version "7.1.0"
+	id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-   jcenter()
+   mavenCentral()
    
    flatDir {
        dirs 'lib'
@@ -44,8 +42,8 @@ dependencies {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
 }
 
 jar {
@@ -55,5 +53,5 @@ jar {
 }
 
 shadowJar {
-	archiveFileName = "${project.name}.${extension}"
+	archiveFileName = "mqtt-gateway.jar"
 }
