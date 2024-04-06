@@ -1,0 +1,21 @@
+services:
+  resource-monitor:
+    image: szbuli/resource-monitor:latest
+    restart: always
+    volumes:
+      - type: bind
+        source: /home/pi/smart-gateway/resource-monitor/settings.ini
+        target: /usr/src/settings.ini
+  mqtt-gateway:
+    image: szbuli/mqtt-gateway:latest
+    restart: always
+    volumes:
+      - type: bind
+        source: /home/pi/smart-gateway/mqtt-gateway/mqtt.properties
+        target: /usr/src/mqtt.properties
+      - type: bind
+        source: /home/pi/smart-gateway/mqtt-gateway/config.csv
+        target: /usr/src/config.csv
+      - type: bind
+        source: /home/pi/smart-gateway/mqtt-gateway/deviceTypes.json
+        target: /usr/src/deviceTypes.json
