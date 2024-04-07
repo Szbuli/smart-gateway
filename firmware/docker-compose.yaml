@@ -1,14 +1,17 @@
 services:
   resource-monitor:
+    container_name: resource-monitor
     image: szbuli/resource-monitor:latest
-    restart: always
+    restart: unless-stopped
     volumes:
       - type: bind
         source: /home/pi/smart-gateway/resource-monitor/settings.ini
         target: /usr/src/settings.ini
   mqtt-gateway:
+    container_name: mqtt-gateway
     image: szbuli/mqtt-gateway:latest
-    restart: always
+    restart: unless-stopped
+    network_mode: host
     volumes:
       - type: bind
         source: /home/pi/smart-gateway/mqtt-gateway/mqtt.properties
@@ -19,3 +22,16 @@ services:
       - type: bind
         source: /home/pi/smart-gateway/mqtt-gateway/deviceTypes.json
         target: /usr/src/deviceTypes.json
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    image: koenkk/zigbee2mqtt:1.36.1
+    volumes:
+      - /home/pi/smart-gateway/zigbee2mqtt:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      - 8080:8080
+    environment:
+      - TZ=Europe/Budapest
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
