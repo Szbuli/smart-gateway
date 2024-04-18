@@ -2,7 +2,7 @@
 permit_join: true
 homeassistant: true
 mqtt:
-  base_topic: zigbee2mqtt-dev
+  base_topic: zigbee2mqtt/dev
   server: mqtts://host:8883
   user: user
   password: password
@@ -16,3 +16,4 @@ frontend:
 advanced:
   network_key: GENERATE
   rtscts: false
+  log_level: warn
