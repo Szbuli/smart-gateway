@@ -1,2 +1,0 @@
-can-id,mqtt-topic,converter
-15,smarthome/alarm_controller/${deviceId}/sensor/1/state,uint8ToOnOff
