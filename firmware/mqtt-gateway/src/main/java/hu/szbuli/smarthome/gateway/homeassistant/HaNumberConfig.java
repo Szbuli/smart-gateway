@@ -32,7 +32,4 @@ public class HaNumberConfig extends HAEntityConfig {
         this.retain = retain;
     }
 
-    
-
-    
 }
