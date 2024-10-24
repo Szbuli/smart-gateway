@@ -16,12 +16,6 @@ services:
       - type: bind
         source: /home/pi/smart-gateway/mqtt-gateway/mqtt.properties
         target: /usr/src/mqtt.properties
-      - type: bind
-        source: /home/pi/smart-gateway/mqtt-gateway/config.csv
-        target: /usr/src/config.csv
-      - type: bind
-        source: /home/pi/smart-gateway/mqtt-gateway/deviceTypes.json
-        target: /usr/src/deviceTypes.json
   zigbee2mqtt:
     container_name: zigbee2mqtt
     restart: unless-stopped

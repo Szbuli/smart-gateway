@@ -90,7 +90,7 @@ public class Gateway {
           canMessage.getTopicId());
       ConversionConfig conversionConfig = can2Mqtt.get(canMessage.getTopicId());
       if (conversionConfig == null) {
-        logger.warn("conversion config not found for can message");
+        logger.warn("conversion config not found for can message: '{}'", canMessage.getTopicId());
         messageStats.messageProcessError();
         return;
       }
