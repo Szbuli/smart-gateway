@@ -14,7 +14,6 @@ public abstract class SafeThread implements Runnable {
   public void run() {
     doRun();
     logger.info("Stopped {}", threadName);
-    System.out.println("stopped");
   }
 
   public abstract void doRun();
@@ -23,7 +22,6 @@ public abstract class SafeThread implements Runnable {
 
   public void start() {
     this.setThreadName();
-    System.out.println("Starting " + threadName);
     logger.info("Starting {}", threadName);
     if (t == null) {
       t = new Thread(this, threadName);

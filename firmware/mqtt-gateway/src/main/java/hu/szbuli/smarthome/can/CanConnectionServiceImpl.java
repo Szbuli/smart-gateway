@@ -57,7 +57,6 @@ public class CanConnectionServiceImpl implements CanConnectionService {
       CanInterface canif = new CanInterface(this.socket, ifName);
       socket.bind(canif);
       CanId canIdObject = new CanId(canId);
-      System.out.println("canId: " + canId);
       canIdObject.setEFFSFF();
       if (isRTR) {
         canIdObject.setRTR();
