@@ -33,7 +33,7 @@ public class DiscoveryManager {
         Arrays.stream(deviceTypes).collect(Collectors.toMap(DeviceType::getDeviceTypeId, dt -> dt));
   }
 
-  public void configure(String type, Map<Integer, ConversionConfig> can2Mqtt, CanMessage canMessage)
+  public void configure(String type, Map<Integer, ConversionConfig> can2Mqtt, CanMessage canMessage, boolean retain)
       throws JsonProcessingException {
     byte[] data = canMessage.getData();
     int deviceId = canMessage.getDeviceId();
@@ -69,10 +69,10 @@ public class DiscoveryManager {
     entityConfig.setName(stateTopic.getTopic());
 
     if (shouldResetDiscoveryTopic(data)) {
-      mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), "", true);
+      mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), "", false);
     } else {
       String configString = objectMapper.writeValueAsString(entityConfig);
-      mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), configString, true);
+      mqttManager.publishMqttMessage(haDiscoveryTopic.getTopic(), configString, retain);
     }
 
   }
@@ -106,6 +106,7 @@ public class DiscoveryManager {
       case "number":
         HaNumberConfig haNumberConfig = new HaNumberConfig();
         haNumberConfig.setCommandTopic(stateTopic.getTopic());
+        haNumberConfig.setStateTopic(stateTopic.getTopic());
         haNumberConfig.setMode("box");
         return haNumberConfig;
       default:

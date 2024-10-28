@@ -61,10 +61,12 @@ public class Gateway {
       Integer canId = Integer.parseInt(record.get("can-id"));
       String mqttTopic = record.get("mqtt-topic");
       String converter = record.get("converter");
+      Boolean retain = Boolean.parseBoolean(record.get("retain"));
       ConversionConfig conversionConfig = new ConversionConfig();
       conversionConfig.setCanTopic(canId);
       conversionConfig.setMqttTopic(mqttTopic);
       conversionConfig.setConverter(converter);
+      conversionConfig.setRetain(retain);
 
       can2Mqtt.put(canId, conversionConfig);
       mqtt2Can.put(mqttTopic, conversionConfig);
@@ -99,18 +101,19 @@ public class Gateway {
       mqttTopic.injectValues("deviceId", canMessage.getDeviceId());
 
       String converter = conversionConfig.getConverter();
+      boolean retain = conversionConfig.isRetain();
 
       if (converter.equals("heartbeat")) {
         heartBeatService.refreshDeviceTimestamp(Instant.now(), mqttTopic.getTopic());
       } else if (converter.startsWith("config")) {
         discoveryManager.configure(converter.substring(converter.indexOf("/") + 1), can2Mqtt,
-            canMessage);
+            canMessage, retain);
       } else {
         byte[] payload = toMqttPayload(canMessage, converter);
 
         logger.debug("can message publishing to {}", mqttTopic.getTopic());
 
-        mqttManager.publishMqttMessage(mqttTopic.getTopic(), payload);
+        mqttManager.publishMqttMessage(mqttTopic.getTopic(), payload, retain);
       }
 
     } catch (Exception e) {

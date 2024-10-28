@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class HaNumberConfig extends HAEntityConfig {
     @JsonProperty("command_topic")
     private String commandTopic;
+    @JsonProperty("state_topic")
+    private String stateTopic;
     private String mode;
     private boolean retain = true;
 
@@ -14,6 +16,14 @@ public class HaNumberConfig extends HAEntityConfig {
 
     public void setCommandTopic(String commandTopic) {
         this.commandTopic = commandTopic;
+    }
+
+    public String getStateTopic() {
+        return stateTopic;
+    }
+
+    public void setStateTopic(String stateTopic) {
+        this.stateTopic = stateTopic;
     }
 
     public String getMode() {

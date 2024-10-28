@@ -5,6 +5,7 @@ public class ConversionConfig {
 	private int canTopic;
 	private String mqttTopic;
 	private String converter;
+	private boolean retain;
 
 	public int getCanTopic() {
 		return canTopic;
@@ -28,6 +29,14 @@ public class ConversionConfig {
 
 	public void setConverter(String converter) {
 		this.converter = converter;
+	}
+
+	public boolean isRetain() {
+		return retain;
+	}
+
+	public void setRetain(boolean retain) {
+		this.retain = retain;
 	}
 
 }

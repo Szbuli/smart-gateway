@@ -13,9 +13,9 @@ RUN sh gradlew shadowJar
 FROM ibm-semeru-runtimes:open-17-jre AS runtime
 
 COPY --from=build /usr/src/app/build/libs/mqtt-gateway.jar /usr/src/mqtt-gateway.jar
-COPY --from=build /usr/src/app/build/libs/config.csv /usr/src/config.csv
-COPY --from=build /usr/src/app/build/libs/deviceTypes.json /usr/src/deviceTypes.json
+COPY --from=build /usr/src/app/config.csv /usr/src/config.csv
+COPY --from=build /usr/src/app/deviceTypes.json /usr/src/deviceTypes.json
 
 WORKDIR /usr/src/app/
 
-ENTRYPOINT ["java", "-jar", "/usr/src/mqtt-gateway.jar", "--mqtt", "/usr/src/mqtt.properties"]
+ENTRYPOINT ["java", "-jar", "/usr/src/mqtt-gateway.jar", "--mqtt", "/usr/src/mqtt.properties", "--gateway", "/usr/src/config.csv", "--deviceTypes", "/usr/src/deviceTypes.json"]
