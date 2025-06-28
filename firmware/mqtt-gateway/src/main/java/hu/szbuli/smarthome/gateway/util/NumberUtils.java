@@ -10,4 +10,8 @@ public class NumberUtils {
     return Byte.toUnsignedInt(uint8);
   }
 
+  public static long uint64ToLong(byte[] uint64) {
+    return Byte.toUnsignedLong(uint64);
+  }
+
 }

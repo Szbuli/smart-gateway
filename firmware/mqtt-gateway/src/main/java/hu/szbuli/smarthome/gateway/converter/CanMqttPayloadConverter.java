@@ -43,4 +43,11 @@ public class CanMqttPayloadConverter implements GatewayConverter {
         (byte) ((Integer.parseInt(numberString) >> 8) & 0xff)};
   }
 
+  @Override
+  public byte[] uint64ToNumber(byte[] uint64) {
+    long number = NumberUtils.uint64ToLong(uint64);
+    return Long.toString(number)
+        .getBytes();
+  }
+
 }

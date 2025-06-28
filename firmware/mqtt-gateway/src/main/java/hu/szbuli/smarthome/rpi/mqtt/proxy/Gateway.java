@@ -193,6 +193,9 @@ public class Gateway {
       case "uint16ToNumber":
         payload = gatewayConverter.uint16ToNumber(canMessage.getData());
         break;
+      case "uint64ToNumber":
+        payload = gatewayConverter.uint64ToNumber(canMessage.getData());
+        break;
       default:
         throw new UnsupportedOperationException(converter);
     }
