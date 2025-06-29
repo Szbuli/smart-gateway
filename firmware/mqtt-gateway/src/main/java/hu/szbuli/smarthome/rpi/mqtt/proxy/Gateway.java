@@ -171,6 +171,9 @@ public class Gateway {
       case "uint16ToNumber":
         payload = gatewayConverter.numberToUint16(mqttPayloadString);
         break;
+      case "uint64ToNumber":
+        payload = gatewayConverter.numberToUint64(mqttPayloadString);
+        break;
       case "config/binary_sensor":
       case "config/switch":
         return null;

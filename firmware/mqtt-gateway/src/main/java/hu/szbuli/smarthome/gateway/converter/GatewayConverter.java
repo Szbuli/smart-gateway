@@ -16,4 +16,6 @@ public interface GatewayConverter {
 
 	byte[] uint64ToNumber(byte[] uint64);
 
+	byte[] numberToUint64(String numberString);
+
 }
