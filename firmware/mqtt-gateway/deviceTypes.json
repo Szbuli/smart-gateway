@@ -1,0 +1,12 @@
+[
+	{
+		"deviceTypeId": 1,
+		"model": "Alarm controller",
+		"manufacturer": "zbl"
+	},
+	{
+		"deviceTypeId": 2,
+		"model": "Relay controller",
+		"manufacturer": "zbl"
+	}
+]

@@ -7,10 +7,8 @@ public class CanMqttPayloadConverter implements GatewayConverter {
 
   @Override
   public byte[] uint8ToOnOff(byte[] uint8) {
-    return Byte.toUnsignedInt(uint8[0]) == 0 ? OnOff.OFF.name()
-        .getBytes()
-        : OnOff.ON.name()
-            .getBytes();
+    return Byte.toUnsignedInt(uint8[0]) == 0 ? OnOff.OFF.name().getBytes()
+        : OnOff.ON.name().getBytes();
   }
 
   @Override
@@ -21,8 +19,7 @@ public class CanMqttPayloadConverter implements GatewayConverter {
 
   @Override
   public byte[] uint8ToNumber(byte[] uint8) {
-    return Integer.toString(NumberUtils.uint8ToInteger(uint8[0]))
-        .getBytes();
+    return Integer.toString(NumberUtils.uint8ToInteger(uint8[0])).getBytes();
   }
 
   @Override
@@ -33,14 +30,27 @@ public class CanMqttPayloadConverter implements GatewayConverter {
   @Override
   public byte[] uint16ToNumber(byte[] uint16) {
     int number = NumberUtils.uint16ToInteger(uint16);
-    return Integer.toString(number)
-        .getBytes();
+    return Integer.toString(number).getBytes();
   }
 
   @Override
   public byte[] numberToUint16(String numberString) {
     return new byte[] {(byte) (Integer.parseInt(numberString) & 0xff),
         (byte) ((Integer.parseInt(numberString) >> 8) & 0xff)};
+  }
+
+  @Override
+  public byte[] uint64ToNumber(byte[] uint64) {
+    long number = NumberUtils.uint64ToLong(uint64);
+    return Long.toString(number).getBytes();
+  }
+
+  @Override
+  public byte[] numberToUint64(String numberString) {
+    long number = Long.parseLong(numberString);
+    return new byte[] {(byte) (number >> 56), (byte) (number >> 48), (byte) (number >> 40),
+        (byte) (number >> 32), (byte) (number >> 24), (byte) (number >> 16), (byte) (number >> 8),
+        (byte) (number)};
   }
 
 }
