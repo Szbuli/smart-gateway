@@ -9,6 +9,8 @@ public class HaNumberConfig extends HAEntityConfig {
     private String stateTopic;
     private String mode;
     private boolean retain = true;
+    private int min = 0;
+    private long max = Long.MAX_VALUE;
 
     public String getCommandTopic() {
         return commandTopic;
@@ -40,6 +42,22 @@ public class HaNumberConfig extends HAEntityConfig {
 
     public void setRetain(boolean retain) {
         this.retain = retain;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public long getMax() {
+        return max;
+    }
+
+    public void setMax(long max) {
+        this.max = max;
     }
 
 }
